@@ -58,6 +58,8 @@ import { ReportModule } from './report/report.module';
 import { ReportController } from './report/report.controller';
 import { ApplicabilityModule } from './master-data/applicability/applicability.module';
 import { ApplicabilityController } from './master-data/applicability/applicability.controller';
+import { MethodologyDataModule } from './master-data/methodology-data/methodology-data.module';
+import { MethodologyDataController } from './master-data/methodology-data/methodology-data.controller';
 
 
 @Module({
@@ -88,6 +90,7 @@ import { ApplicabilityController } from './master-data/applicability/applicabili
     SectorModule,
     ProjectStatusModule,
     FinancingSchemeModule,
+    MethodologyDataModule,
     DocumentModule,
     AuthModule,
     UsersModule,
@@ -135,6 +138,7 @@ import { ApplicabilityController } from './master-data/applicability/applicabili
     AppController,
     FinancingSchemeController,
     FinancingSchemeController,
+    MethodologyDataController,
     MethodologyController,
 
     EmissionReductionDraftdataController,
