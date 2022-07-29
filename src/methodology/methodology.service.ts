@@ -4,6 +4,7 @@ import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Methodology } from './entity/methodology.entity';
 import { Sector } from 'src/master-data/sector/sector.entity';
+import { Country } from 'src/country/entity/country.entity';
 
 @Injectable()
 export class MethodologyService extends TypeOrmCrudService<Methodology>{
@@ -46,6 +47,7 @@ export class MethodologyService extends TypeOrmCrudService<Methodology>{
         let data = this.repo
             .createQueryBuilder('me')
             .leftJoinAndMapOne('me.sectorId', Sector, 'sector', 'sector.id = me.sectorId',)
+            .leftJoinAndMapOne('me.countryId', Country, 'country', 'country.id = me.countryId',)
             .where(filter, {
                 filterText: `%${filterText}%`,
                 sectorId,

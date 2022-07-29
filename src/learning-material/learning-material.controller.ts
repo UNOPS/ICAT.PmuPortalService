@@ -136,6 +136,7 @@ export class LearningMaterialController implements CrudController<LearningMateri
     });
     try {
       dto.learningMaterialusertype.map(async (b) => {
+        b.userid =b.userType.id;
         let lmus = await this.LearningMaterialUserTypeRepo.save(await b);
       });
     } catch (error) {
