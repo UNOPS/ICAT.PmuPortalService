@@ -83,7 +83,7 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
 
       let data = this.repo
       .createQueryBuilder('ins')
-      // .leftJoinAndMapMany('ins.countries', Country, 'con', 'ins.id = con.institutionId')//country = table name
+      .leftJoinAndMapMany('ins.countries', Country, 'con', 'ins.id = con.institutionId')//country = table name
     
       //.leftJoinAndMapOne('ins.category', InstitutionCategory, 'cate', 'cate.id = ins.categoryId')
       .leftJoinAndMapOne('ins.type', InstitutionType, 'type', 'type.id = ins.typeId')
