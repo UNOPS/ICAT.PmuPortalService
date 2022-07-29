@@ -41,7 +41,7 @@ export class  AuthService {
         fname: (selectedUser).firstName, 
         lname: (selectedUser).lastName, 
         countryId:selectedUser.country.id,
-        ...([UserTypeNames.PMUAdmin].includes(selectedUser.userType.id)) &&{ institutionId:selectedUser.institution.id},
+        ...([UserTypeNames.PMUAdmin].includes(selectedUser.userType.id) || [UserTypeNames.PMUUser].includes(selectedUser.userType.id)) &&{ institutionId:selectedUser.institution.id},
         roles : [(selectedUser).userType.name]};
       
       
