@@ -48,6 +48,33 @@ export class CountryController implements CrudController<Country>{
     
     @UseGuards(JwtAuthGuard)
     @Override()
+    async updateOne(
+      @Request() request,
+      @ParsedRequest() req: CrudRequest,
+      @ParsedBody() dto: Country,
+    ){
+      // console.log('connn',dto.countrysector)
+      let coun_sec=dto.countrysector
+      // coun_sec.f
+      var x:number = 0  
+
+      let old_countrysector=(await this.CountryRepo.findOne(dto.id)).countrysector;
+
+      // console.log("++++",old_countrysector)
+      let sec =old_countrysector.filter((a)=>!coun_sec.some((b)=>a.sectorId==b.sector.id));
+      // console.log("++",sec)
+
+      sec.forEach((a)=> this.CountrySectorRepo.delete(a.id));
+
+      coun_sec.forEach((a)=>{a.countryId=dto.id,this.CountrySectorRepo.save(a)})
+
+      let coun = await this.base.updateOneBase(req, dto);
+      return coun;
+    }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Override()
     async createOne(
       @Request() request,
       @ParsedRequest() req: CrudRequest,

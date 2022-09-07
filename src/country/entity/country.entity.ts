@@ -74,8 +74,9 @@ export class Country extends BaseTrackingEntity{
   @Column({ default: null })
   uniqueIdentification: string;
 
-  @OneToMany(() => CountrySector, countrySector => countrySector.country)
-  public countrysector!: CountrySector[];
+  @OneToMany(() => CountrySector, countrySector => countrySector.country,{eager:true})
+  @JoinColumn()
+  countrysector: CountrySector[];
 
   /*
   @ManyToMany((type) => Sector, {
