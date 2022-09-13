@@ -1,6 +1,6 @@
 import {Sector} from "src/master-data/sector/sector.entity";
 import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Generated, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Country } from "./country.entity";
 
 @Entity({ name: 'country_sector' })
@@ -25,6 +25,10 @@ export class CountrySector extends BaseTrackingEntity {
     countryId:number;
     @Column("sectorId")
     sectorId:number;
+
+    @Column()
+    @Generated("uuid")
+    uniqueIdentification: string;
 
     /*
     @ManyToMany((type) => UserType, {
