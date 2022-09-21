@@ -104,6 +104,9 @@ export class Country extends BaseTrackingEntity{
   @Column({ default: null })
   dataCollectionModule: boolean;
 
+  @Column({ default: null })
+  dataCollectionGhgModule: boolean;
+
 
 
 
