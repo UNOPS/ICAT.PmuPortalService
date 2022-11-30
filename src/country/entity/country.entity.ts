@@ -107,12 +107,10 @@ export class Country extends BaseTrackingEntity{
   @Column({ default: null })
   dataCollectionGhgModule: boolean;
 
+  @Column({ default: null })
+  isSingleCountry: number;
 
-
-
-
-
-
-
+  @Column({ default: null })
+  domain: string;
 
 }
