@@ -56,7 +56,7 @@ export class CountryController implements CrudController<Country>{
     // console.log('connn',dto.countrysector)
     let coun_sec = dto.countrysector;
 
-    let old_countrysector = (await this.CountryRepo.findOne(dto.id)).countrysector;
+    let old_countrysector = (await this.CountryRepo.findOne({where: { id: dto.id }})).countrysector;
 
     // console.log("++++",old_countrysector)
     let sec = old_countrysector.filter((a) => !coun_sec.some((b) => a.sectorId == b.sector.id));

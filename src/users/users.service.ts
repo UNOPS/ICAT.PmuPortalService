@@ -161,13 +161,13 @@ export class UsersService extends TypeOrmCrudService<User> {
 
 
   async chnageStatus(userId: number, status: number): Promise<User> {
-    let user = await this.usersRepository.findOne(userId);
+    let user = await this.usersRepository.findOne({where: { id: userId }});
     user.status = status;
     return this.usersRepository.save(user);
   }
   
   async chnagePassword(userId: number, newPassword: string): Promise<User> {
-    let user = await this.usersRepository.findOne(userId);
+    let user = await this.usersRepository.findOne({where: { id: userId }});
     user.password = newPassword;
     return this.usersRepository.save(user);
   }
@@ -177,7 +177,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     newToken: string,
   ): Promise<User> {
     let systemLoginUrl = this.configService.get<string>('LOGIN_URL');
-    let user = await this.usersRepository.findOne(userId);
+    let user = await this.usersRepository.findOne({where: { id: userId }});
     user.resetToken = newToken;
     let newUUID = uuidv4();
     let newPassword = ('' + newUUID).substr(0, 6);
@@ -213,11 +213,11 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   findByUserName(userName: string): Promise<User> {
-    return this.usersRepository.findOne({ username: userName });
+    return this.usersRepository.findOne({where: { username: userName }});
   }
 
   async validateUser(userName: string, password: string): Promise<boolean> {
-    const user = await this.usersRepository.findOne({ username: userName });
+    const user = await this.usersRepository.findOne({where: { username: userName }});
 
     console.log(user);
 
@@ -239,7 +239,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     // }).catch(()=>{
     //   return false;
     // });
-    let user = await this.usersRepository.findOne({ username: userName });
+    let user = await this.usersRepository.findOne({where:{ username: userName }});
     if (user) {
       console.log('UsersService.findByUserName : true ===============');
 
@@ -253,7 +253,7 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   async findUserByUserName(userName: string): Promise<any> {
     return await this.usersRepository
-      .findOne({ username: userName })
+      .findOne({where:{ username: userName }})
       .then((value) => {
         console.log(value);
         if (!!value) {
@@ -271,7 +271,7 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   async findUserByEmail(email: string): Promise<any> {
     return await this.usersRepository
-      .findOne({ email: email })
+      .findOne({where:{ email: email }})
       .then((value) => {
         console.log(value);
         if (!!value) {
@@ -296,7 +296,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     email: string,
     token: string,
   ): Promise<boolean> {
-    const user = await this.usersRepository.findOne({ email: email });
+    const user = await this.usersRepository.findOne({where:{ email: email }});
     console.log(user);
 
     if (user && user.resetToken === token) {
@@ -311,7 +311,7 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async resetPassword(email: string, password: string): Promise<boolean> {
-    let user = await this.usersRepository.findOne({ email: email });
+    let user = await this.usersRepository.findOne({where: { email: email }});
     console.log(user);
     if (user) {
       let salt = await bcript.genSalt();
