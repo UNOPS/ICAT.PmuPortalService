@@ -2,7 +2,7 @@ import { Injectable, Options } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
-//import { Assessment } from 'src/assesment/entity/assesment.entity';
+//import { Assessment } from 'src/assessment/entity/assessment.entity';
 import { Country } from 'src/country/entity/country.entity';
 import { Ndc } from 'src/master-data/ndc/ndc.entity';
 import { Sector } from 'src/master-data/sector/sector.entity';

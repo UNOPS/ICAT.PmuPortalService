@@ -78,7 +78,7 @@ CREATE TABLE `applicability` (
   `assessmentId` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_e5ad0e8cc607797a5183636e596` (`assessmentId`),
-  CONSTRAINT `FK_e5ad0e8cc607797a5183636e596` FOREIGN KEY (`assessmentId`) REFERENCES `assesment` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FK_e5ad0e8cc607797a5183636e596` FOREIGN KEY (`assessmentId`) REFERENCES `assessment` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -93,13 +93,13 @@ INSERT INTO `applicability` VALUES (NULL,'2022-02-11 07:11:36',NULL,'2022-02-11 
 UNLOCK TABLES;
 
 --
--- Table structure for table `assesment`
+-- Table structure for table `assessment`
 --
 
-DROP TABLE IF EXISTS `assesment`;
+DROP TABLE IF EXISTS `assessment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `assesment` (
+CREATE TABLE `assessment` (
   `createdBy` varchar(255) DEFAULT NULL,
   `createdOn` datetime DEFAULT NULL,
   `editedBy` varchar(255) DEFAULT NULL,
@@ -150,23 +150,23 @@ CREATE TABLE `assesment` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `assesment`
+-- Dumping data for table `assessment`
 --
 
-LOCK TABLES `assesment` WRITE;
-/*!40000 ALTER TABLE `assesment` DISABLE KEYS */;
-INSERT INTO `assesment` VALUES ('','2022-02-11 08:14:22','','2022-02-11 08:14:22',0,1,2020,'2021-11-29 18:30:00',1,NULL,0,NULL,NULL,NULL,'','',0,1,'',NULL,NULL,NULL,'ICAT_TPM_FSR_2020_A','1',NULL,2,NULL,2,NULL,1,1),('','2022-02-13 16:20:42','','2022-02-13 16:20:42',0,2,2020,'2022-02-01 18:30:00',25,NULL,0,NULL,NULL,NULL,'gsvsjewjewkncds nsabhmsabjwbw','32',0,1,'',NULL,NULL,NULL,'cdm_ams_iii_s','1',NULL,1,NULL,3,NULL,1,1),('','2022-02-15 03:44:18','','2022-02-15 03:44:18',0,3,2022,'2021-11-29 18:30:00',1,NULL,0,'Ex post',NULL,NULL,'gvshshjsjsja','test',0,0,'',NULL,NULL,NULL,'cdm_ams_iii_s','1',NULL,1,NULL,2,NULL,1,1),('','2022-02-15 04:04:16','','2022-02-15 04:04:16',0,4,2060,'2022-01-31 18:30:00',99,NULL,0,'Ex post',NULL,NULL,'gsvsjewjewkncds nsabhmsabjwbw','mmfgfgf',0,0,'',NULL,NULL,NULL,'cdm_ams_iii_s','1',NULL,1,NULL,5,NULL,1,1),('','2022-02-15 04:47:49','','2022-02-15 04:47:49',0,5,2020,'2023-10-04 18:30:00',5,NULL,0,'Ex post',NULL,NULL,'Emissions from conventional fuel consumption in transport sector of Sri Lanka without carbon tax','Emissions from conventional fuel consumption in transport sector of Sri Lanka with carbon tax',0,0,'',NULL,NULL,NULL,'ICAT_TPM_FSR_2020_A','1',NULL,2,NULL,7,NULL,1,1),('','2022-02-15 07:36:45','','2022-02-15 07:36:45',0,6,2020,'2025-02-27 18:30:00',5,NULL,0,'Ex anthe',NULL,NULL,'Deisel passsenger bus ','CNG using for Public passenger buses',0,0,'','GDP',2020,NULL,'cdm_ams_iii_s','1',NULL,1,NULL,6,NULL,1,1);
-/*!40000 ALTER TABLE `assesment` ENABLE KEYS */;
+LOCK TABLES `assessment` WRITE;
+/*!40000 ALTER TABLE `assessment` DISABLE KEYS */;
+INSERT INTO `assessment` VALUES ('','2022-02-11 08:14:22','','2022-02-11 08:14:22',0,1,2020,'2021-11-29 18:30:00',1,NULL,0,NULL,NULL,NULL,'','',0,1,'',NULL,NULL,NULL,'ICAT_TPM_FSR_2020_A','1',NULL,2,NULL,2,NULL,1,1),('','2022-02-13 16:20:42','','2022-02-13 16:20:42',0,2,2020,'2022-02-01 18:30:00',25,NULL,0,NULL,NULL,NULL,'gsvsjewjewkncds nsabhmsabjwbw','32',0,1,'',NULL,NULL,NULL,'cdm_ams_iii_s','1',NULL,1,NULL,3,NULL,1,1),('','2022-02-15 03:44:18','','2022-02-15 03:44:18',0,3,2022,'2021-11-29 18:30:00',1,NULL,0,'Ex post',NULL,NULL,'gvshshjsjsja','test',0,0,'',NULL,NULL,NULL,'cdm_ams_iii_s','1',NULL,1,NULL,2,NULL,1,1),('','2022-02-15 04:04:16','','2022-02-15 04:04:16',0,4,2060,'2022-01-31 18:30:00',99,NULL,0,'Ex post',NULL,NULL,'gsvsjewjewkncds nsabhmsabjwbw','mmfgfgf',0,0,'',NULL,NULL,NULL,'cdm_ams_iii_s','1',NULL,1,NULL,5,NULL,1,1),('','2022-02-15 04:47:49','','2022-02-15 04:47:49',0,5,2020,'2023-10-04 18:30:00',5,NULL,0,'Ex post',NULL,NULL,'Emissions from conventional fuel consumption in transport sector of Sri Lanka without carbon tax','Emissions from conventional fuel consumption in transport sector of Sri Lanka with carbon tax',0,0,'',NULL,NULL,NULL,'ICAT_TPM_FSR_2020_A','1',NULL,2,NULL,7,NULL,1,1),('','2022-02-15 07:36:45','','2022-02-15 07:36:45',0,6,2020,'2025-02-27 18:30:00',5,NULL,0,'Ex anthe',NULL,NULL,'Deisel passsenger bus ','CNG using for Public passenger buses',0,0,'','GDP',2020,NULL,'cdm_ams_iii_s','1',NULL,1,NULL,6,NULL,1,1);
+/*!40000 ALTER TABLE `assessment` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `assesmentObjective`
+-- Table structure for table `assessmentObjective`
 --
 
-DROP TABLE IF EXISTS `assesmentObjective`;
+DROP TABLE IF EXISTS `assessmentObjective`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `assesmentObjective` (
+CREATE TABLE `assessmentObjective` (
   `createdBy` varchar(255) DEFAULT NULL,
   `createdOn` datetime DEFAULT NULL,
   `editedBy` varchar(255) DEFAULT NULL,
@@ -180,23 +180,23 @@ CREATE TABLE `assesmentObjective` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `assesmentObjective`
+-- Dumping data for table `assessmentObjective`
 --
 
-LOCK TABLES `assesmentObjective` WRITE;
-/*!40000 ALTER TABLE `assesmentObjective` DISABLE KEYS */;
-INSERT INTO `assesmentObjective` VALUES (NULL,'2022-02-01 18:46:50',NULL,'2022-02-01 18:46:50',0,1,'Prioritize policies',NULL),(NULL,'2022-02-01 18:46:50',NULL,'2022-02-01 18:46:50',0,2,'Mitigation planning',NULL),(NULL,'2022-02-01 18:46:50',NULL,'2022-02-01 18:46:50',0,3,'Report results',NULL),(NULL,'2022-02-01 18:46:50',NULL,'2022-02-01 18:46:50',0,4,'Emission trading',NULL);
-/*!40000 ALTER TABLE `assesmentObjective` ENABLE KEYS */;
+LOCK TABLES `assessmentObjective` WRITE;
+/*!40000 ALTER TABLE `assessmentObjective` DISABLE KEYS */;
+INSERT INTO `assessmentObjective` VALUES (NULL,'2022-02-01 18:46:50',NULL,'2022-02-01 18:46:50',0,1,'Prioritize policies',NULL),(NULL,'2022-02-01 18:46:50',NULL,'2022-02-01 18:46:50',0,2,'Mitigation planning',NULL),(NULL,'2022-02-01 18:46:50',NULL,'2022-02-01 18:46:50',0,3,'Report results',NULL),(NULL,'2022-02-01 18:46:50',NULL,'2022-02-01 18:46:50',0,4,'Emission trading',NULL);
+/*!40000 ALTER TABLE `assessmentObjective` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `assesmentYear`
+-- Table structure for table `assessmentYear`
 --
 
-DROP TABLE IF EXISTS `assesmentYear`;
+DROP TABLE IF EXISTS `assessmentYear`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `assesmentYear` (
+CREATE TABLE `assessmentYear` (
   `createdBy` varchar(255) DEFAULT NULL,
   `createdOn` datetime DEFAULT NULL,
   `editedBy` varchar(255) DEFAULT NULL,
@@ -216,83 +216,83 @@ CREATE TABLE `assesmentYear` (
   `isVerificationSuccess` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_4ae20ec4ff6ca5b478ac31269a2` (`assessmentId`),
-  CONSTRAINT `FK_4ae20ec4ff6ca5b478ac31269a2` FOREIGN KEY (`assessmentId`) REFERENCES `assesment` (`id`)
+  CONSTRAINT `FK_4ae20ec4ff6ca5b478ac31269a2` FOREIGN KEY (`assessmentId`) REFERENCES `assessment` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `assesmentYear`
+-- Dumping data for table `assessmentYear`
 --
 
-LOCK TABLES `assesmentYear` WRITE;
-/*!40000 ALTER TABLE `assesmentYear` DISABLE KEYS */;
-INSERT INTO `assesmentYear` VALUES (NULL,NULL,NULL,NULL,0,1,'2020',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0),(NULL,NULL,NULL,NULL,0,2,'2022',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,0),(NULL,NULL,NULL,NULL,0,3,'2013',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,3,0),(NULL,NULL,NULL,NULL,0,4,'2013',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,4,0),(NULL,NULL,NULL,NULL,0,5,'2023',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,5,0),(NULL,NULL,NULL,NULL,0,6,'2028',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,5,0),(NULL,NULL,NULL,NULL,0,7,'2025',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,6,0);
-/*!40000 ALTER TABLE `assesmentYear` ENABLE KEYS */;
+LOCK TABLES `assessmentYear` WRITE;
+/*!40000 ALTER TABLE `assessmentYear` DISABLE KEYS */;
+INSERT INTO `assessmentYear` VALUES (NULL,NULL,NULL,NULL,0,1,'2020',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0),(NULL,NULL,NULL,NULL,0,2,'2022',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,0),(NULL,NULL,NULL,NULL,0,3,'2013',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,3,0),(NULL,NULL,NULL,NULL,0,4,'2013',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,4,0),(NULL,NULL,NULL,NULL,0,5,'2023',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,5,0),(NULL,NULL,NULL,NULL,0,6,'2028',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,5,0),(NULL,NULL,NULL,NULL,0,7,'2025',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,6,0);
+/*!40000 ALTER TABLE `assessmentYear` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `assesment_applicability_applicability`
+-- Table structure for table `assessment_applicability_applicability`
 --
 
-DROP TABLE IF EXISTS `assesment_applicability_applicability`;
+DROP TABLE IF EXISTS `assessment_applicability_applicability`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `assesment_applicability_applicability` (
-  `assesmentId` int NOT NULL,
+CREATE TABLE `assessment_applicability_applicability` (
+  `assessmentId` int NOT NULL,
   `applicabilityId` int NOT NULL,
-  PRIMARY KEY (`assesmentId`,`applicabilityId`),
-  KEY `IDX_2b1d8641b4ac0095f5c4a1acb8` (`assesmentId`),
+  PRIMARY KEY (`assessmentId`,`applicabilityId`),
+  KEY `IDX_2b1d8641b4ac0095f5c4a1acb8` (`assessmentId`),
   KEY `IDX_899cf5b6ae66de5a2f715f2c98` (`applicabilityId`),
-  CONSTRAINT `FK_2b1d8641b4ac0095f5c4a1acb8c` FOREIGN KEY (`assesmentId`) REFERENCES `assesment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_2b1d8641b4ac0095f5c4a1acb8c` FOREIGN KEY (`assessmentId`) REFERENCES `assessment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_899cf5b6ae66de5a2f715f2c987` FOREIGN KEY (`applicabilityId`) REFERENCES `applicability` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `assesment_applicability_applicability`
+-- Dumping data for table `assessment_applicability_applicability`
 --
 
-LOCK TABLES `assesment_applicability_applicability` WRITE;
-/*!40000 ALTER TABLE `assesment_applicability_applicability` DISABLE KEYS */;
-/*!40000 ALTER TABLE `assesment_applicability_applicability` ENABLE KEYS */;
+LOCK TABLES `assessment_applicability_applicability` WRITE;
+/*!40000 ALTER TABLE `assessment_applicability_applicability` DISABLE KEYS */;
+/*!40000 ALTER TABLE `assessment_applicability_applicability` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `assesment_assessment_objective_assesment_objective`
+-- Table structure for table `assessment_assessment_objective_assessment_objective`
 --
 
-DROP TABLE IF EXISTS `assesment_assessment_objective_assesment_objective`;
+DROP TABLE IF EXISTS `assessment_assessment_objective_assessment_objective`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `assesment_assessment_objective_assesment_objective` (
-  `assesmentId` int NOT NULL,
-  `assesmentObjectiveId` int NOT NULL,
-  PRIMARY KEY (`assesmentId`,`assesmentObjectiveId`),
-  KEY `IDX_0cf100c4d91809032232bdc555` (`assesmentId`),
-  KEY `IDX_77ee65132daa3cd38cfeaba477` (`assesmentObjectiveId`),
-  CONSTRAINT `FK_0cf100c4d91809032232bdc555b` FOREIGN KEY (`assesmentId`) REFERENCES `assesment` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FK_77ee65132daa3cd38cfeaba4771` FOREIGN KEY (`assesmentObjectiveId`) REFERENCES `assesmentObjective` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE `assessment_assessment_objective_assessment_objective` (
+  `assessmentId` int NOT NULL,
+  `assessmentObjectiveId` int NOT NULL,
+  PRIMARY KEY (`assessmentId`,`assessmentObjectiveId`),
+  KEY `IDX_0cf100c4d91809032232bdc555` (`assessmentId`),
+  KEY `IDX_77ee65132daa3cd38cfeaba477` (`assessmentObjectiveId`),
+  CONSTRAINT `FK_0cf100c4d91809032232bdc555b` FOREIGN KEY (`assessmentId`) REFERENCES `assessment` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `FK_77ee65132daa3cd38cfeaba4771` FOREIGN KEY (`assessmentObjectiveId`) REFERENCES `assessmentObjective` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `assesment_assessment_objective_assesment_objective`
+-- Dumping data for table `assessment_assessment_objective_assessment_objective`
 --
 
-LOCK TABLES `assesment_assessment_objective_assesment_objective` WRITE;
-/*!40000 ALTER TABLE `assesment_assessment_objective_assesment_objective` DISABLE KEYS */;
-INSERT INTO `assesment_assessment_objective_assesment_objective` VALUES (1,4),(3,2),(3,4),(4,1),(4,2),(5,2),(6,3);
-/*!40000 ALTER TABLE `assesment_assessment_objective_assesment_objective` ENABLE KEYS */;
+LOCK TABLES `assessment_assessment_objective_assessment_objective` WRITE;
+/*!40000 ALTER TABLE `assessment_assessment_objective_assessment_objective` DISABLE KEYS */;
+INSERT INTO `assessment_assessment_objective_assessment_objective` VALUES (1,4),(3,2),(3,4),(4,1),(4,2),(5,2),(6,3);
+/*!40000 ALTER TABLE `assessment_assessment_objective_assessment_objective` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `assessmentResault`
+-- Table structure for table `assessmentResult`
 --
 
-DROP TABLE IF EXISTS `assessmentResault`;
+DROP TABLE IF EXISTS `assessmentResult`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `assessmentResault` (
+CREATE TABLE `assessmentResult` (
   `createdBy` varchar(255) DEFAULT NULL,
   `createdOn` datetime DEFAULT NULL,
   `editedBy` varchar(255) DEFAULT NULL,
@@ -317,23 +317,23 @@ CREATE TABLE `assessmentResault` (
   `qcStatusLekageResult` int DEFAULT NULL,
   `qcStatusTotalEmission` int DEFAULT NULL,
   `assessmentYearId` int DEFAULT NULL,
-  `assementId` int DEFAULT NULL,
+  `assessmentId` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `REL_2abaf0b68ee7cb1c55a5d51551` (`assessmentYearId`),
-  KEY `FK_1df0eedfacc4a46a3811bf3de78` (`assementId`),
-  CONSTRAINT `FK_1df0eedfacc4a46a3811bf3de78` FOREIGN KEY (`assementId`) REFERENCES `assesment` (`id`),
-  CONSTRAINT `FK_2abaf0b68ee7cb1c55a5d515513` FOREIGN KEY (`assessmentYearId`) REFERENCES `assesmentYear` (`id`)
+  KEY `FK_1df0eedfacc4a46a3811bf3de78` (`assessmentId`),
+  CONSTRAINT `FK_1df0eedfacc4a46a3811bf3de78` FOREIGN KEY (`assessmentId`) REFERENCES `assessment` (`id`),
+  CONSTRAINT `FK_2abaf0b68ee7cb1c55a5d515513` FOREIGN KEY (`assessmentYearId`) REFERENCES `assessmentYear` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `assessmentResault`
+-- Dumping data for table `assessmentResult`
 --
 
-LOCK TABLES `assessmentResault` WRITE;
-/*!40000 ALTER TABLE `assessmentResault` DISABLE KEYS */;
-INSERT INTO `assessmentResault` VALUES ('-','2022-02-11 08:14:26','-','2022-02-11 08:14:26',0,1,1500,NULL,1000,NULL,100,NULL,400,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1),('-','2022-02-13 16:20:45','-','2022-02-13 16:20:45',0,2,1500,NULL,1000,NULL,100,NULL,400,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,2);
-/*!40000 ALTER TABLE `assessmentResault` ENABLE KEYS */;
+LOCK TABLES `assessmentResult` WRITE;
+/*!40000 ALTER TABLE `assessmentResult` DISABLE KEYS */;
+INSERT INTO `assessmentResult` VALUES ('-','2022-02-11 08:14:26','-','2022-02-11 08:14:26',0,1,1500,NULL,1000,NULL,100,NULL,400,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1),('-','2022-02-13 16:20:45','-','2022-02-13 16:20:45',0,2,1500,NULL,1000,NULL,100,NULL,400,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,2);
+/*!40000 ALTER TABLE `assessmentResult` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1274,7 +1274,7 @@ CREATE TABLE `parameter` (
   KEY `FK_86eff4c77820b616bf6ac0c19b2` (`defaultValueId`),
   CONSTRAINT `FK_86eff4c77820b616bf6ac0c19b2` FOREIGN KEY (`defaultValueId`) REFERENCES `default_value` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `FK_c584a0d5a74c7cfb5bcc3ecf9f0` FOREIGN KEY (`institutionId`) REFERENCES `institution` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FK_f65f85e073aff8e11ef4f5c3d8a` FOREIGN KEY (`assessmentId`) REFERENCES `assesment` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FK_f65f85e073aff8e11ef4f5c3d8a` FOREIGN KEY (`assessmentId`) REFERENCES `assessment` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1411,13 +1411,13 @@ CREATE TABLE `projectionResualt` (
   `qcStatus` int DEFAULT NULL,
   `qcComment` varchar(255) DEFAULT NULL,
   `projectionResualt` int NOT NULL,
-  `assementResultId` int DEFAULT NULL,
-  `assementId` int DEFAULT NULL,
+  `assessmentResultId` int DEFAULT NULL,
+  `assessmentId` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK_5365358a3ff956ef2aa1a3f5cbc` (`assementResultId`),
-  KEY `FK_b405923865f5ae43237538e0c0d` (`assementId`),
-  CONSTRAINT `FK_5365358a3ff956ef2aa1a3f5cbc` FOREIGN KEY (`assementResultId`) REFERENCES `assesment` (`id`),
-  CONSTRAINT `FK_b405923865f5ae43237538e0c0d` FOREIGN KEY (`assementId`) REFERENCES `assesment` (`id`)
+  KEY `FK_5365358a3ff956ef2aa1a3f5cbc` (`assessmentResultId`),
+  KEY `FK_b405923865f5ae43237538e0c0d` (`assessmentId`),
+  CONSTRAINT `FK_5365358a3ff956ef2aa1a3f5cbc` FOREIGN KEY (`assessmentResultId`) REFERENCES `assessment` (`id`),
+  CONSTRAINT `FK_b405923865f5ae43237538e0c0d` FOREIGN KEY (`assessmentId`) REFERENCES `assessment` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1449,7 +1449,7 @@ CREATE TABLE `projectionYear` (
   `assessmentId` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_e958cca2567ef32db2242601100` (`assessmentId`),
-  CONSTRAINT `FK_e958cca2567ef32db2242601100` FOREIGN KEY (`assessmentId`) REFERENCES `assesment` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FK_e958cca2567ef32db2242601100` FOREIGN KEY (`assessmentId`) REFERENCES `assessment` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1649,7 +1649,7 @@ CREATE TABLE `report_assessment` (
   KEY `FK_21bf6ee02e608c1ee1705683833` (`reportId`),
   KEY `FK_c444bfdcc0cd5177ac741a3c5e5` (`assessmentId`),
   CONSTRAINT `FK_21bf6ee02e608c1ee1705683833` FOREIGN KEY (`reportId`) REFERENCES `report` (`id`),
-  CONSTRAINT `FK_c444bfdcc0cd5177ac741a3c5e5` FOREIGN KEY (`assessmentId`) REFERENCES `assesment` (`id`)
+  CONSTRAINT `FK_c444bfdcc0cd5177ac741a3c5e5` FOREIGN KEY (`assessmentId`) REFERENCES `assessment` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1987,7 +1987,7 @@ CREATE TABLE `verificationDetail` (
   PRIMARY KEY (`id`),
   KEY `FK_3f44853a3143c25338eac826b20` (`assessmentYearId`),
   KEY `FK_a43b0a788bdea978049ff34837a` (`parameterId`),
-  CONSTRAINT `FK_3f44853a3143c25338eac826b20` FOREIGN KEY (`assessmentYearId`) REFERENCES `assesmentYear` (`id`),
+  CONSTRAINT `FK_3f44853a3143c25338eac826b20` FOREIGN KEY (`assessmentYearId`) REFERENCES `assessmentYear` (`id`),
   CONSTRAINT `FK_a43b0a788bdea978049ff34837a` FOREIGN KEY (`parameterId`) REFERENCES `parameter` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
