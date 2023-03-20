@@ -10,7 +10,6 @@ import { SubNdcController } from './sub-ndc.controller';
 import { SubNdc } from './sub-ndc.entity';
 import { SubNdcService } from './sub-ndc.service';
 
-
 @Module({
   imports: [TypeOrmModule.forFeature([Ndc, SubNdc, NdcSet])],
   controllers: [NdcController, NdcSetController, SubNdcController],

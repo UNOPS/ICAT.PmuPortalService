@@ -1,13 +1,10 @@
 import {
-  BaseEntity,
   Column,
   DeleteDateColumn,
   Entity,
   Generated,
   JoinColumn,
   ManyToOne,
-  OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import * as bcript from 'bcrypt';
@@ -15,7 +12,6 @@ import { UserType } from './user.type.entity';
 import { Exclude } from 'class-transformer';
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
 import { Institution } from 'src/institution/institution.entity';
-import { Audit } from 'src/audit/entity/audit.entity';
 import { Country } from 'src/country/entity/country.entity';
 
 @Entity()
@@ -26,16 +22,15 @@ export class User extends BaseTrackingEntity {
     this.status = 0;
     this.password = '';
     this.resetToken = '';
-    //  this.abc = this.firstName + this.lastName;
   }
 
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   @Column()
-  @Generated("uuid")
-  uniqueIdentification:string;
+  @Generated('uuid')
+  uniqueIdentification: string;
 
   @ManyToOne((type) => UserType, { eager: true })
   @JoinColumn()
@@ -57,7 +52,6 @@ export class User extends BaseTrackingEntity {
   @JoinColumn()
   institution: Institution;
 
-
   @Column()
   telephone: string;
 
@@ -67,7 +61,7 @@ export class User extends BaseTrackingEntity {
   @Column({ nullable: true })
   mrvInstitution: string;
 
-  @ManyToOne((type) => Country, { cascade: false, eager:true })
+  @ManyToOne((type) => Country, { cascade: false, eager: true })
   @JoinColumn({ name: 'countryId' })
   country?: Country;
 
@@ -94,8 +88,6 @@ export class User extends BaseTrackingEntity {
   updateFullName() {
     this.fullName = this.firstName + (this.lastName ? ' ' + this.lastName : '');
   }
-
-  // abc: string = ()=>{  this.firstName + this.lastName};
 
   get fullname2() {
     return this.firstName;

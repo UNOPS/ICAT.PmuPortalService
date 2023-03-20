@@ -37,16 +37,13 @@ import { SectorService } from './sector.service';
 })
 @Controller('sector')
 export class SectorController implements CrudController<Sector> {
-
   constructor(
-    
     public service: SectorService,
     @InjectRepository(SubSector)
     public SubSectorRepo: Repository<SubSector>,
 
     private readonly auditService: AuditService,
-
-    ) {}
+  ) {}
 
   get base(): CrudController<Sector> {
     return this;
@@ -58,40 +55,29 @@ export class SectorController implements CrudController<Sector> {
     @Request() req2,
   ): Promise<GetManyDefaultResponse<Sector> | Sector[]> {
     try {
-      let res = await this.base.getManyBase(req);
-      // console.log('*********************************************');
-      // console.log(res);
-      // console.log('*********************************************');
-      // console.log(req);
+      const res = await this.base.getManyBase(req);
       return res;
     } catch (error) {
-      console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-      console.log(error);
+      
+      
     }
   }
 
-
-@Get(
-  'sector/sectorinfo/:page/:limit/:filterText', 
-  )
+  @Get('sector/sectorinfo/:page/:limit/:filterText')
   async getSectorDetails(
     @Request() request,
     @Query('page') page: number,
     @Query('limit') limit: number,
     @Query('filterText') filterText: string,
-    
   ): Promise<any> {
-    // console.log(moment(editedOn).format('YYYY-MM-DD'))
     return await this.service.getSectorDetails(
       {
         limit: limit,
         page: page,
       },
       filterText,
-      
     );
   }
-
 
   @UseGuards(JwtAuthGuard)
   @Override()
@@ -100,46 +86,31 @@ export class SectorController implements CrudController<Sector> {
     @ParsedRequest() req: CrudRequest,
     @ParsedBody() dto: Sector,
   ): Promise<Sector> {
-   
-     
-      //console.log("came to inside...",dto);
+    const lm = await this.base.createOneBase(req, dto);
 
-      let lm = await this.base.createOneBase(req, dto);
+    const audit: AuditDto = new AuditDto();
+    audit.action = lm.name + ' Sector Created';
+    audit.comment = 'Sector Created';
+    audit.actionStatus = 'Created';
+    this.auditService.create(audit);
+    
+
+    let x = 0;
+    dto.subSector.map((a) => {
+      a.name = dto.subSector[x].name;
+      a.description = dto.subSector[x].description;
+      a.sector.id = lm.id;
+      x++;
+    });
+
+    try {
+      dto.subSector.map(async (a) => {
+        const lms = await this.SubSectorRepo.save(await a);
+      });
+    } catch (error) {
       
-      let audit: AuditDto = new AuditDto();
-      audit.action = lm.name+' Sector Created';
-      audit.comment = "Sector Created";
-      audit.actionStatus = 'Created';
-      this.auditService.create(audit);
-      console.log("audit.......",audit);
+    }
 
-
-
-      var x:number = 0
-        dto.subSector.map((a) => {
-
-           a.name= dto.subSector[x].name;
-           a.description = dto.subSector[x].description;
-           a.sector.id = lm.id;
-           x++;
-          
-         });
-         
-
-         try {
-          dto.subSector.map(async (a) => {
-            let lms = await this.SubSectorRepo.save(await a);
-          });
-        } catch (error) {
-          console.log(error);
-        }
-
-      return lm;
+    return lm;
   }
-
-
-
-
-
-
 }

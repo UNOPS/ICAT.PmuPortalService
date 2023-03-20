@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Project } from './entity/project.entity';
 import {
@@ -18,7 +18,7 @@ export class ProjectService extends TypeOrmCrudService<Project> {
     super(repo);
   }
 
-  async getProjectDetails(  
+  async getProjectDetails(
     options: IPaginationOptions,
     filterText: string,
     sectorId: number,
@@ -26,12 +26,10 @@ export class ProjectService extends TypeOrmCrudService<Project> {
     mitigationActionTypeId: number,
     editedOn: string,
   ): Promise<Pagination<Project>> {
-    let filter: string = '';
-    // let fDate = `${editedOn.getFullYear()}-${editedOn.getMonth()+1}-${editedOn.getDate()}`;
+    let filter = '';
 
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-        // '(dr.climateActionName LIKE :filterText OR dr.description LIKE :filterText)';
         '(dr.climateActionName LIKE :filterText OR dr.contactPersoFullName LIKE :filterText OR sec.name LIKE :filterText OR mit.name LIKE :filterText OR pst.name LIKE :filterText OR dr.editedOn LIKE :filterText)';
     }
 
@@ -59,7 +57,7 @@ export class ProjectService extends TypeOrmCrudService<Project> {
       }
     }
 
-    let data = this.repo
+    const data = this.repo
       .createQueryBuilder('dr')
       .leftJoinAndMapOne('dr.sector', Sector, 'sec', 'sec.id = dr.sectorId')
       .leftJoinAndMapOne(
@@ -74,7 +72,6 @@ export class ProjectService extends TypeOrmCrudService<Project> {
         'pst',
         'pst.id = dr.projectStatusId',
       )
-      //   .innerJoinAndMapOne('dr.user', User, 'u', 'dr.userId = u.id')
 
       .where(filter, {
         filterText: `%${filterText}%`,
@@ -84,34 +81,28 @@ export class ProjectService extends TypeOrmCrudService<Project> {
         editedOn,
       })
       .orderBy('dr.createdOn', 'DESC');
-    // console.log(
-    //   '=====================================================================',
-    // );
-    // console.log(data.getQuery());
 
-    let resualt = await paginate(data, options);
+    const result = await paginate(data, options);
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
-
 
   async getAllCAList(
     options: IPaginationOptions,
     filterText: string,
     projectStatusId: number,
     projectApprovalStatusId: number,
-   
+
     countryId: number,
     sectorId: number,
   ): Promise<Pagination<Project>> {
-    let filter: string = '';
+    let filter = '';
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
         '(dr.climateActionName LIKE :filterText OR asse.assessmentType LIKE :filterText OR para.AssessmentYear LIKE :filterText OR dr.institution LIKE :filterText OR pas.name LIKE :filterText OR pst.name LIKE :filterText OR dr.contactPersoFullName LIKE :filterText  OR dr.editedOn LIKE :filterText OR dr.createdOn LIKE :filterText OR dr.acceptedDate LIKE :filterText)';
     }
-   // console.log("hello");
     if (projectStatusId != 0) {
       if (filter) {
         filter = `${filter}  and dr.projectStatusId = :projectStatusId`;
@@ -128,21 +119,11 @@ export class ProjectService extends TypeOrmCrudService<Project> {
       }
     }
 
-   
-
-    // if isactive = 0 ---> all climate actions
-    // if isactive = 1 ---> active climate actions
-    // if active = 2 ---> 
-
-   
-       
-      if (filter) {
-        filter = `${filter}  and pas.id !=4 `; // no proposed CA s all climate
-      } else {
-        filter = `pas.id !=4`;
-      }
-    
-    
+    if (filter) {
+      filter = `${filter}  and pas.id !=4 `;
+    } else {
+      filter = `pas.id !=4`;
+    }
 
     if (countryId != 0) {
       if (filter) {
@@ -160,7 +141,7 @@ export class ProjectService extends TypeOrmCrudService<Project> {
       }
     }
 
-    let data = this.repo
+    const data = this.repo
       .createQueryBuilder('dr')
       .leftJoinAndMapOne(
         'dr.projectStatus',
@@ -174,17 +155,6 @@ export class ProjectService extends TypeOrmCrudService<Project> {
         'pas',
         'pas.id = dr.projectApprovalStatusId',
       )
-      
-    /* 
-      .leftJoinAndMapMany(
-        'asse.parameter',
-        Parameter,
-        'para',
-        'para.assessmentId = asse.id',
-      )
-     */
-
-      //   .innerJoinAndMapOne('dr.user', User, 'u', 'dr.userId = u.id')
 
       .where(filter, {
         filterText: `%${filterText}%`,
@@ -194,21 +164,13 @@ export class ProjectService extends TypeOrmCrudService<Project> {
         sectorId,
       })
       .orderBy('dr.createdOn', 'ASC');
-    console.log(
-      '=====================================================================',
-    );
-    //console.log(data.getQuery());
 
-    let result = await paginate(data, options);
-    console.log(result);
+    const result = await paginate(data, options);
+    
     if (result) {
       return result;
     }
   }
-
-
-
-
 
   async getAllProjectDetails(
     options: IPaginationOptions,
@@ -219,15 +181,14 @@ export class ProjectService extends TypeOrmCrudService<Project> {
     Active: number,
     countryId: number,
     sectorId: number,
-    
   ): Promise<Pagination<Project>> {
-    let filter: string = '';
+    let filter = '';
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
         '(dr.climateActionName LIKE :filterText  OR dr.institution LIKE :filterText OR pas.name LIKE :filterText OR pst.name LIKE :filterText OR dr.contactPersoFullName LIKE :filterText  OR dr.editedOn LIKE :filterText OR dr.createdOn LIKE :filterText OR dr.acceptedDate LIKE :filterText)';
     }
 
-    if (projectStatusId !=0) {
+    if (projectStatusId != 0) {
       if (filter) {
         filter = `${filter}  and dr.projectStatusId = :projectStatusId`;
       } else {
@@ -243,39 +204,31 @@ export class ProjectService extends TypeOrmCrudService<Project> {
       }
     }
 
-    if (assessmentStatusName != null && assessmentStatusName != undefined && assessmentStatusName != '') {
+    if (
+      assessmentStatusName != null &&
+      assessmentStatusName != undefined &&
+      assessmentStatusName != ''
+    ) {
       if (filter) {
         filter = `${filter}  and asse.assessmentStage = :assessmentStatusName`;
       } else {
         filter = `asse.assessmentStage = :assessmentStatusName`;
       }
-    }  
-
-
-// if active = 0 ---> whole climateactions list
-// if active = 1 ---> all climate actions
-// if active = 2 ---> active climate actions
+    }
 
     if (Active == 1) {
-    // console.log(Active);
       if (filter) {
-        filter = `${filter}  and pas.id != 1 `; // no proposed CA s all climate
+        filter = `${filter}  and pas.id != 1 `;
       } else {
         filter = `pas.id != 1`;
       }
-    } 
-    else if (Active == 2) {
-      //console.log(Active);
+    } else if (Active == 2) {
       if (filter) {
-        filter = `${filter}  and pas.id = 3 `; // only active CA s
+        filter = `${filter}  and pas.id = 3 `;
       } else {
         filter = `pas.id = 3 `;
       }
-     
-    } 
-
-    
-     
+    }
 
     if (countryId != 0) {
       if (filter) {
@@ -293,10 +246,7 @@ export class ProjectService extends TypeOrmCrudService<Project> {
       }
     }
 
-
-    
-
-    let data = this.repo
+    const data = this.repo
       .createQueryBuilder('dr')
       .leftJoinAndMapOne(
         'dr.projectStatus',
@@ -310,13 +260,7 @@ export class ProjectService extends TypeOrmCrudService<Project> {
         'pas',
         'pas.id = dr.projectApprovalStatusId',
       )
-      .leftJoinAndMapMany(
-        'dr.assessement',
-        'asse',
-        'asse.projectId = dr.id',
-      )
-
-      //   .innerJoinAndMapOne('dr.user', User, 'u', 'dr.userId = u.id')
+      .leftJoinAndMapMany('dr.assessement', 'asse', 'asse.projectId = dr.id')
 
       .where(filter, {
         filterText: `%${filterText}%`,
@@ -327,16 +271,12 @@ export class ProjectService extends TypeOrmCrudService<Project> {
         countryId,
         sectorId,
       })
-      .orderBy('dr.createdOn', 'DESC'); 
-    // console.log(
-    //   '=====================================================================',
-   // );
-    // console.log(data.getQuery());
+      .orderBy('dr.createdOn', 'DESC');
 
-    let resualt = await paginate(data, options);
+    const result = await paginate(data, options);
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 }

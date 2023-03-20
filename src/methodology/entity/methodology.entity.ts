@@ -1,15 +1,21 @@
-import { Country } from "src/country/entity/country.entity";
-import { ApplicabilityEntity } from "src/master-data/applicability/applicability.entity";
-import { MethodologyData } from "src/master-data/methodology-data/methodology-data.entity";
-import { MitigationActionType } from "src/master-data/mitigation-action/mitigation-action.entity";
-import { Sector } from "src/master-data/sector/sector.entity";
-import { BaseTrackingEntity } from "src/shared/entities/base.tracking.entity";
-import { Column, Entity, Generated, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Active } from "./active.entity";
+import { Country } from 'src/country/entity/country.entity';
+import { ApplicabilityEntity } from 'src/master-data/applicability/applicability.entity';
+import { MethodologyData } from 'src/master-data/methodology-data/methodology-data.entity';
+import { MitigationActionType } from 'src/master-data/mitigation-action/mitigation-action.entity';
+import { Sector } from 'src/master-data/sector/sector.entity';
+import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
+import {
+  Column,
+  Entity,
+  Generated,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Active } from './active.entity';
 
 @Entity({ name: 'methodology' })
 export class Methodology extends BaseTrackingEntity {
-
   constructor() {
     super();
     this.createdBy = '';
@@ -56,7 +62,7 @@ export class Methodology extends BaseTrackingEntity {
   ghgIncluded: string;
 
   @Column()
-  @Generated("uuid")
+  @Generated('uuid')
   uniqueIdentification: string;
 
   @ManyToOne((type) => Country, { cascade: false })
@@ -78,6 +84,4 @@ export class Methodology extends BaseTrackingEntity {
   @ManyToOne((type) => MethodologyData, { cascade: false })
   @JoinColumn({ name: 'methodId' })
   method?: MethodologyData;
-
-
 }

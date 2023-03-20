@@ -5,14 +5,12 @@ import {
   Crud,
   CrudController,
   CrudRequest,
-  GetManyDefaultResponse,
   Override,
   ParsedBody,
   ParsedRequest,
 } from '@nestjsx/crud';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { Repository } from 'typeorm-next';
-
 import { Project } from './entity/project.entity';
 import { ProjectService } from './project.service';
 const fs = require('fs');
@@ -83,28 +81,18 @@ export class ProjectController implements CrudController<Project> {
     @ParsedBody() dto: Project,
   ) {
     try {
-      console.log(
-        '-----------------------------------------------------------',
-      );
       dto.createdBy = '-';
       dto.editedBy = '-';
 
-      console.log(dto);
+      
 
-      let newplData = await this.base.createOneBase(req, dto);
+      const newplData = await this.base.createOneBase(req, dto);
 
       return newplData;
     } catch (error) {
-      console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-      console.log(error);
       throw error;
     }
-
-    // await this.service.ceateSelfConvertion(dto.unitOfMeasure);
-    // await this.service.ceateReverseConvertion(dto);
   }
-
-
 
   @Get(
     'AllClimateAction/projectinfo/:page/:limit/:filterText/:projectStatusId/:projectApprovalStatusId/:countryId/:sectorId',
@@ -119,7 +107,6 @@ export class ProjectController implements CrudController<Project> {
     @Query('countryId') countryId: number,
     @Query('sectorId') sectorId: number,
   ): Promise<any> {
-    // console.log("heelo controler");
     return await this.service.getAllCAList(
       {
         limit: limit,
@@ -128,18 +115,14 @@ export class ProjectController implements CrudController<Project> {
       filterText,
       projectStatusId,
       projectApprovalStatusId,
-   
+
       countryId,
       sectorId,
     );
   }
 
-
-
-
-
   @Get(
-    'project/projectinfo/:page/:limit/:sectorId/:statusId/:mitigationActionTypeId/:editedOn/:filterText', 
+    'project/projectinfo/:page/:limit/:sectorId/:statusId/:mitigationActionTypeId/:editedOn/:filterText',
   )
   async getClimateActionDetails(
     @Request() request,
@@ -150,9 +133,7 @@ export class ProjectController implements CrudController<Project> {
     @Query('mitigationActionTypeId') mitigationActionTypeId: number,
     @Query('editedOn') editedOn: string,
     @Query('filterText') filterText: string,
-    
   ): Promise<any> {
-    // console.log(moment(editedOn).format('YYYY-MM-DD'))
     return await this.service.getProjectDetails(
       {
         limit: limit,
@@ -175,8 +156,8 @@ export class ProjectController implements CrudController<Project> {
     @Query('limit') limit: number,
     @Query('filterText') filterText: string,
     @Query('projectStatusId') projectStatusId: number,
-    @Query('projectApprovalStatusId') projectApprovalStatusId: number,  
-    @Query('assessmentStatusName') assessmentStatusName: string, 
+    @Query('projectApprovalStatusId') projectApprovalStatusId: number,
+    @Query('assessmentStatusName') assessmentStatusName: string,
     @Query('Active') Active: number,
     @Query('countryId') countryId: number,
     @Query('sectorId') sectorId: number,
@@ -190,7 +171,7 @@ export class ProjectController implements CrudController<Project> {
       projectStatusId,
       projectApprovalStatusId,
       assessmentStatusName,
-      Active, 
+      Active,
       countryId,
       sectorId,
     );
@@ -202,14 +183,14 @@ export class ProjectController implements CrudController<Project> {
     @ParsedRequest() req: CrudRequest,
     @ParsedBody() dto: Project,
   ) {
-    let project = await this.projectRepository.findOne({
+    const project = await this.projectRepository.findOne({
       where: { id: dto.id },
       relations: ['projectApprovalStatus'],
     });
 
-    let updateData = await this.base.updateOneBase(req, dto);
+    const updateData = await this.base.updateOneBase(req, dto);
     const baseurl = this.configService.get<string>('ClientURl');
-    console.log(baseurl);
+    
 
     if (
       dto.projectApprovalStatus &&

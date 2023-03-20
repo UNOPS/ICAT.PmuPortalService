@@ -1,23 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { count } from 'console';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 import * as bcript from 'bcrypt';
-import { ResetPassword } from 'src/auth/Dto/reset.password.dto';
-import { RSA_PSS_SALTLEN_MAX_SIGN } from 'constants';
 import { UserType } from './user.type.entity';
-import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { Institution } from 'src/institution/institution.entity';
 import { RecordStatus } from 'src/shared/entities/base.tracking.entity';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Country } from 'src/country/entity/country.entity';
-import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { InstitutionCategory } from 'src/institution/institution.category.entity';
-import { InstitutionType } from 'src/institution/institution.type.entity';
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -40,62 +38,38 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    //console.log("CreateUser=====",createUserDto.institution['id'])
-    //console.log("CreateUserwwwwww=====",createUserDto.userType['id'])
-    console.log("CreateUserYYY=====",createUserDto)
+    
 
-    let userType = await this.usersTypeRepository.findOne(
+    const userType = await this.usersTypeRepository.findOne(
       createUserDto.userType['id'],
     );
 
-    // let institution;
-    // if(createUserDto.userType['id'] == 3)
-    
-    // {
-      
-    //    institution = await this.institutionRepository.findOne(
-    //     createUserDto.institution['id'],
-    //   );
-  
-    // }
     let countryId = null;
     let insId = null;
-    if(createUserDto.userType['id'] == 3){
-      console.log("okkkkkkkk")
+    if (createUserDto.userType['id'] == 3) {
+      
       countryId = null;
       insId = createUserDto.institution['id'];
-      console.log("Hi==",countryId)  
-    }
-    else if(createUserDto.userType['id'] == 2){
+      
+    } else if (createUserDto.userType['id'] == 2) {
       countryId = createUserDto.country['id'];
       insId = 0;
-      let cou = await this.countryRepo.findOne(countryId);
-      cou.isCA =true;
-      this.countryRepo.save(cou)
-    }
-
-    else if(createUserDto.userType['id'] == 1){
+      const cou = await this.countryRepo.findOne(countryId);
+      cou.isCA = true;
+      this.countryRepo.save(cou);
+    } else if (createUserDto.userType['id'] == 1) {
+      countryId = null;
+      insId = createUserDto.institution['id'];
+    } else if (createUserDto.userType['id'] == 5) {
       countryId = null;
       insId = createUserDto.institution['id'];
     }
 
-    else if(createUserDto.userType['id'] == 5){
-      countryId = null;
-      insId = createUserDto.institution['id'];
-    }
+    const institution = await this.institutionRepository.findOne(insId);
 
+    const country = await this.countryRepo.findOne(countryId);
 
-    let institution = await this.institutionRepository.findOne(
-      insId
-    );
-
-    //To-do get country id from current context
-
-    // let countryId = createUserDto.country['id'];
-   // let countryId = 1;
-    let country = await this.countryRepo.findOne(countryId);
-
-    let newUser = new User();
+    const newUser = new User();
 
     newUser.firstName = createUserDto.firstName;
     newUser.lastName = createUserDto.lastName;
@@ -110,8 +84,8 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.mrvInstitution = createUserDto.mrvInstitution;
     newUser.salt = await bcript.genSalt();
 
-    let newUUID = uuidv4();
-    let newPassword = ('' + newUUID).substr(0, 6);
+    const newUUID = uuidv4();
+    const newPassword = ('' + newUUID).substr(0, 6);
     createUserDto.password = newPassword;
     newUser.password = await this.hashPassword(
       createUserDto.password,
@@ -119,19 +93,17 @@ export class UsersService extends TypeOrmCrudService<User> {
     );
     newUser.resetToken = '';
 
-    var newUserDb = await this.usersRepository.save(newUser);
-    // get an environment variable
-    let systemLoginUrl='';
-    if(newUser.userType.id ==2){
-      let url= "https://icat-ca-tool.climatesi.com/icat-country-app/"
-       systemLoginUrl = url//this.configService.get<string>("https://icat-ca-tool.climatesi.com/icat-country-app/");
-    }
-    else{
-      let url= "https://icat-ca-tool.climatesi.com/pmu-app/login"
-       systemLoginUrl =url// this.configService.get<string>('LOGIN_URL');
+    const newUserDb = await this.usersRepository.save(newUser);
+    let systemLoginUrl = '';
+    if (newUser.userType.id == 2) {
+      const url = 'https://icat-ca-tool.climatesi.com/icat-country-app/';
+      systemLoginUrl = url;
+    } else {
+      const url = 'https://icat-ca-tool.climatesi.com/pmu-app/login';
+      systemLoginUrl = url;
     }
 
-    var template =
+    const template =
       'Dear ' +
       newUserDb.firstName +
       ' ' +
@@ -140,12 +112,16 @@ export class UsersService extends TypeOrmCrudService<User> {
       newUserDb.email +
       ' and your login password is : ' +
       newPassword +
-      ' <br/>System login url is'+' <a href="' +systemLoginUrl + '">'+systemLoginUrl+'</a>'+
+      ' <br/>System login url is' +
+      ' <a href="' +
+      systemLoginUrl +
+      '">' +
+      systemLoginUrl +
+      '</a>' +
       '<br/>' +
-      '<br/>Best regards'+ 
+      '<br/>Best regards' +
       '<br/>Software support team';
 
-    // sned email with new password
     this.emaiService.sendMail(
       newUserDb.email,
       'Your credentials for ICAT system',
@@ -159,15 +135,14 @@ export class UsersService extends TypeOrmCrudService<User> {
     return newUserDb;
   }
 
-
   async chnageStatus(userId: number, status: number): Promise<User> {
-    let user = await this.usersRepository.findOne({where: { id: userId }});
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
     user.status = status;
     return this.usersRepository.save(user);
   }
-  
+
   async chnagePassword(userId: number, newPassword: string): Promise<User> {
-    let user = await this.usersRepository.findOne({where: { id: userId }});
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
     user.password = newPassword;
     return this.usersRepository.save(user);
   }
@@ -176,26 +151,27 @@ export class UsersService extends TypeOrmCrudService<User> {
     userId: number,
     newToken: string,
   ): Promise<User> {
-    let systemLoginUrl = this.configService.get<string>('LOGIN_URL');
-    let user = await this.usersRepository.findOne({where: { id: userId }});
+    const systemLoginUrl = this.configService.get<string>('LOGIN_URL');
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
     user.resetToken = newToken;
-    let newUUID = uuidv4();
-    let newPassword = ('' + newUUID).substr(0, 6);
-    user.password = await this.hashPassword(
-      user.password,
-      user.salt,
-    );
-    user.password =newPassword;
+    const newUUID = uuidv4();
+    const newPassword = ('' + newUUID).substr(0, 6);
+    user.password = await this.hashPassword(user.password, user.salt);
+    user.password = newPassword;
     this.usersRepository.save(user);
 
-    var template =
-    'Dear ' + user.firstName +" "+ user.lastName+
-    ' <br/>Your username is ' +
-    user.email +
-    '<br/> your login password is : ' +
-    newPassword +
-    ' <br/>System login url is ' +'<a href="systemLoginUrl">'+
-    systemLoginUrl;
+    const template =
+      'Dear ' +
+      user.firstName +
+      ' ' +
+      user.lastName +
+      ' <br/>Your username is ' +
+      user.email +
+      '<br/> your login password is : ' +
+      newPassword +
+      ' <br/>System login url is ' +
+      '<a href="systemLoginUrl">' +
+      systemLoginUrl;
 
     this.emaiService.sendMail(
       user.email,
@@ -203,49 +179,38 @@ export class UsersService extends TypeOrmCrudService<User> {
       '',
       template,
     );
-  
+
     return this.usersRepository.save(user);
   }
 
   async findAll(): Promise<User[]> {
-    console.log("urepo====",this.usersRepository.find())
     return this.usersRepository.find();
   }
 
   findByUserName(userName: string): Promise<User> {
-    return this.usersRepository.findOne({where: { username: userName }});
+    return this.usersRepository.findOne({ where: { username: userName } });
   }
 
   async validateUser(userName: string, password: string): Promise<boolean> {
-    const user = await this.usersRepository.findOne({where: { username: userName }});
+    const user = await this.usersRepository.findOne({
+      where: { username: userName },
+    });
 
-    console.log(user);
+    
 
     return (await user).validatePassword(password);
   }
 
-  // findOne(id: string): Promise<User> {
-  //   return this.usersRepository.findOne(id);
-  // }
-
   async isUserAvailable(userName: string): Promise<any> {
-    // await this.usersRepository.count({username: userName}).then((value)=>{
-    //   if(value>0){
-    //     return true;
-    //   }
-    //   else{ 
-    //     return false;
-    //   }
-    // }).catch(()=>{
-    //   return false;
-    // });
-    let user = await this.usersRepository.findOne({where:{ username: userName }});
+    const user = await this.usersRepository.findOne({
+      where: { username: userName },
+    });
     if (user) {
-      console.log('UsersService.findByUserName : true ===============');
+      
 
       return user;
     } else {
-      console.log('UsersService.findByUserName : false ===============');
+      
 
       return user;
     }
@@ -253,11 +218,11 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   async findUserByUserName(userName: string): Promise<any> {
     return await this.usersRepository
-      .findOne({where:{ username: userName }})
+      .findOne({ where: { username: userName } })
       .then((value) => {
-        console.log(value);
+        
         if (!!value) {
-          console.log('inside', value.id);
+          
 
           return value.id;
         } else {
@@ -271,11 +236,11 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   async findUserByEmail(email: string): Promise<any> {
     return await this.usersRepository
-      .findOne({where:{ email: email }})
+      .findOne({ where: { email: email } })
       .then((value) => {
-        console.log(value);
+        
         if (!!value) {
-          console.log('inside', value.id);
+          
 
           return value;
         } else {
@@ -283,7 +248,7 @@ export class UsersService extends TypeOrmCrudService<User> {
         }
       })
       .catch((e) => {
-        console.log('findUserByEmail error', e);
+        
         return false;
       });
   }
@@ -296,41 +261,45 @@ export class UsersService extends TypeOrmCrudService<User> {
     email: string,
     token: string,
   ): Promise<boolean> {
-    const user = await this.usersRepository.findOne({where:{ email: email }});
-    console.log(user);
+    const user = await this.usersRepository.findOne({
+      where: { email: email },
+    });
+    
 
     if (user && user.resetToken === token) {
-      console.log('in if ');
+      
 
       return true;
     } else {
-      console.log('in else');
+      
 
       return false;
     }
   }
 
   async resetPassword(email: string, password: string): Promise<boolean> {
-    let user = await this.usersRepository.findOne({where: { email: email }});
-    console.log(user);
+    const user = await this.usersRepository.findOne({
+      where: { email: email },
+    });
+    
     if (user) {
-      let salt = await bcript.genSalt();
-      console.log('password', password, 'salt', salt);
+      const salt = await bcript.genSalt();
+      
       user.salt = salt;
       user.password = await this.hashPassword(password, salt);
-      console.log('inside success');
+      
 
       await this.usersRepository.save(user);
 
-      console.log('inside success2');
+      
 
-      await this.updateChnagePasswordToken(user.id, ''); // clean the tocken
+      await this.updateChnagePasswordToken(user.id, '');
 
-      console.log('inside success3');
+      
 
       return true;
     }
-    console.log('inside fail');
+    
 
     return false;
   }
@@ -339,61 +308,62 @@ export class UsersService extends TypeOrmCrudService<User> {
     return await bcript.hash(password, salt);
   }
 
-
   async getUserDetails(
-    
     options: IPaginationOptions,
     filterText: string,
     userTypeId: number,
   ): Promise<Pagination<User>> {
-    console.log('calling......')
-    let filter: string = '';
+    
+    let filter = '';
 
-    if(filterText != null && filterText != undefined && filterText != ''){
-      filter = 
-      '(user.firstName LIKE :filterText OR user.lastName LIKE :filterText OR user.telephone LIKE :filterText OR user.email LIKE :filterText OR ins.name LIKE :filterText OR type.name LIKE :filterText)'
+    if (filterText != null && filterText != undefined && filterText != '') {
+      filter =
+        '(user.firstName LIKE :filterText OR user.lastName LIKE :filterText OR user.telephone LIKE :filterText OR user.email LIKE :filterText OR ins.name LIKE :filterText OR type.name LIKE :filterText)';
     }
 
-    if(userTypeId !=0){
-      if(filter){
+    if (userTypeId != 0) {
+      if (filter) {
         filter = `${filter} and user.userTypeId = :userTypeId`;
-      }else{
+      } else {
         filter = `user.userTypeId = :userTypeId`;
       }
     }
 
-    let data = this.repo
-    .createQueryBuilder('user')
-    .leftJoinAndMapOne('user.institution', Institution, 'ins','ins.id = user.institutionId',)
-    .leftJoinAndMapOne('user.userType', UserType, 'type', 'type.id = user.userTypeId',)
-    // .leftJoinAndMapOne('user.country',Country, 'con',)
+    const data = this.repo
+      .createQueryBuilder('user')
+      .leftJoinAndMapOne(
+        'user.institution',
+        Institution,
+        'ins',
+        'ins.id = user.institutionId',
+      )
+      .leftJoinAndMapOne(
+        'user.userType',
+        UserType,
+        'type',
+        'type.id = user.userTypeId',
+      )
 
-    .where(filter, {
-      filterText: `%${filterText}%`,
-      userTypeId,
-    }).orderBy('user.status','ASC');
+      .where(filter, {
+        filterText: `%${filterText}%`,
+        userTypeId,
+      })
+      .orderBy('user.status', 'ASC');
 
-    let resualt = await paginate(data, options);
+    const result = await paginate(data, options);
 
-    if(resualt){
-    //  console.log('reaslt...',resualt)
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 
   async findUserByUserType() {
-    console.log("sssssssss " );
-    let data =await this.repo
-    .createQueryBuilder('u')
-    .select('*')
-    .where(
-      'u.userTypeId = 2'
-    ).execute();
-    // console.log("sssssssss ",data.execute() );
+    
+    const data = await this.repo
+      .createQueryBuilder('u')
+      .select('*')
+      .where('u.userTypeId = 2')
+      .execute();
     return data;
   }
-
-  
-
 }
-
