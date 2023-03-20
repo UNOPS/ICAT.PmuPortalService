@@ -47,7 +47,6 @@ export class DocumentController implements CrudController<Documents> {
     @Param('oid') oid,
     @Param('owner') owner,
   ) {
-    
     const docowner: DocumentOwner = (<any>DocumentOwner)[owner];
     const path = join(owner, oid, file.filename);
     const doc = new Documents();

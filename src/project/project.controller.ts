@@ -84,8 +84,6 @@ export class ProjectController implements CrudController<Project> {
       dto.createdBy = '-';
       dto.editedBy = '-';
 
-      
-
       const newplData = await this.base.createOneBase(req, dto);
 
       return newplData;
@@ -189,8 +187,7 @@ export class ProjectController implements CrudController<Project> {
     });
 
     const updateData = await this.base.updateOneBase(req, dto);
-    const baseurl = this.configService.get<string>('ClientURl');
-    
+    const baseurl = process.env.CLIENT_URL;
 
     if (
       dto.projectApprovalStatus &&

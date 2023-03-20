@@ -66,7 +66,6 @@ export class UsersController implements CrudController<User> {
     audit.comment = 'User Created';
     audit.actionStatus = 'Created';
     this.auditService.create(audit);
-    
 
     return this.service.create(createUserDto);
   }
@@ -76,8 +75,6 @@ export class UsersController implements CrudController<User> {
     @Query('id') id: number,
     @Query('status') status: number,
   ): Promise<User> {
-    
-
     return this.service.chnageStatus(id, status);
   }
 
@@ -112,8 +109,6 @@ export class UsersController implements CrudController<User> {
 
   @Override()
   async getMany(@ParsedRequest() req: CrudRequest, @Request() req2) {
-    
-
     const userList = this.base.getManyBase(req);
     return userList;
   }
@@ -126,7 +121,6 @@ export class UsersController implements CrudController<User> {
     @Query('filterText') filterText: string,
     @Query('userTypeId') userTypeId: number,
   ): Promise<any> {
-    
     return await this.service.getUserDetails(
       {
         limit: limit,
@@ -145,7 +139,6 @@ export class UsersController implements CrudController<User> {
     @Query('userTypeId') filterText: string,
     @Query('userTypeId') userTypeId: number,
   ): Promise<any> {
-    
     return await this.service.getUserDetails(
       {
         limit: limit,

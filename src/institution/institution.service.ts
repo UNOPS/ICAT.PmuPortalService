@@ -36,7 +36,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     }
 
     if (countryId != 0) {
-      
       if (filter) {
         filter = `con.id  = :countryId`;
       } else {
@@ -77,7 +76,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       const result = await paginate(data, options);
 
       if (result) {
-        
         return result;
       }
     } else {
@@ -115,7 +113,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
       const result = await paginate(data, options);
 
       if (result) {
-        
         return result;
       }
     }
@@ -127,7 +124,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     let filter = '';
 
     if (filter) {
-      
       filter = `con.id  = :countryId`;
     } else {
       filter = `user.institutionId IS NULL and user.userTypeId = 1`;
@@ -167,7 +163,6 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
     const result = await paginate(data, options);
 
     if (result) {
-      
       return result;
     }
   }

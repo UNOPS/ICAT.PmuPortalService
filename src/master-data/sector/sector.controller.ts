@@ -57,10 +57,7 @@ export class SectorController implements CrudController<Sector> {
     try {
       const res = await this.base.getManyBase(req);
       return res;
-    } catch (error) {
-      
-      
-    }
+    } catch (error) {}
   }
 
   @Get('sector/sectorinfo/:page/:limit/:filterText')
@@ -93,7 +90,6 @@ export class SectorController implements CrudController<Sector> {
     audit.comment = 'Sector Created';
     audit.actionStatus = 'Created';
     this.auditService.create(audit);
-    
 
     let x = 0;
     dto.subSector.map((a) => {
@@ -107,9 +103,7 @@ export class SectorController implements CrudController<Sector> {
       dto.subSector.map(async (a) => {
         const lms = await this.SubSectorRepo.save(await a);
       });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
 
     return lm;
   }

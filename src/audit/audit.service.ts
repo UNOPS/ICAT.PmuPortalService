@@ -32,12 +32,9 @@ export class AuditService extends TypeOrmCrudService<Audit> {
       this.contextUser = this.request.user.username;
     }
 
-    
     const user = await this.userRepo.findOne({
       where: { email: this.contextUser },
     });
-
-    
 
     const newAudit = new Audit();
     newAudit.action = auditDto.action;

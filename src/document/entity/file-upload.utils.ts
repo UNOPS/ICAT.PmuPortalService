@@ -11,7 +11,7 @@ export class FileUpload {
   }
 
   getbaseUrl() {
-    return this.configService.get<string>('baseUrl');
+    return process.env.BASE_URL;
   }
 }
 
@@ -35,9 +35,7 @@ export const fileLocation = (req, file, callback) => {
       {
         recursive: true,
       },
-      (e) => {
-        
-      },
+      (e) => {},
     );
   }
   callback(null, dir);

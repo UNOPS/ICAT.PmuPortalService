@@ -38,8 +38,6 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    
-
     const userType = await this.usersTypeRepository.findOne(
       createUserDto.userType['id'],
     );
@@ -47,10 +45,8 @@ export class UsersService extends TypeOrmCrudService<User> {
     let countryId = null;
     let insId = null;
     if (createUserDto.userType['id'] == 3) {
-      
       countryId = null;
       insId = createUserDto.institution['id'];
-      
     } else if (createUserDto.userType['id'] == 2) {
       countryId = createUserDto.country['id'];
       insId = 0;
@@ -96,10 +92,10 @@ export class UsersService extends TypeOrmCrudService<User> {
     const newUserDb = await this.usersRepository.save(newUser);
     let systemLoginUrl = '';
     if (newUser.userType.id == 2) {
-      const url = 'https://icat-ca-tool.climatesi.com/icat-country-app/';
+      const url = process.env.COUNTRY_LOGIN_URL;
       systemLoginUrl = url;
     } else {
-      const url = 'https://icat-ca-tool.climatesi.com/pmu-app/login';
+      const url = process.env.PMU_LOGIN_URL;
       systemLoginUrl = url;
     }
 
@@ -151,7 +147,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     userId: number,
     newToken: string,
   ): Promise<User> {
-    const systemLoginUrl = this.configService.get<string>('LOGIN_URL');
+    const systemLoginUrl = process.env.PMU_LOGIN_URL;
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     user.resetToken = newToken;
     const newUUID = uuidv4();
@@ -196,8 +192,6 @@ export class UsersService extends TypeOrmCrudService<User> {
       where: { username: userName },
     });
 
-    
-
     return (await user).validatePassword(password);
   }
 
@@ -206,12 +200,8 @@ export class UsersService extends TypeOrmCrudService<User> {
       where: { username: userName },
     });
     if (user) {
-      
-
       return user;
     } else {
-      
-
       return user;
     }
   }
@@ -220,10 +210,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     return await this.usersRepository
       .findOne({ where: { username: userName } })
       .then((value) => {
-        
         if (!!value) {
-          
-
           return value.id;
         } else {
           return 0;
@@ -238,17 +225,13 @@ export class UsersService extends TypeOrmCrudService<User> {
     return await this.usersRepository
       .findOne({ where: { email: email } })
       .then((value) => {
-        
         if (!!value) {
-          
-
           return value;
         } else {
           return false;
         }
       })
       .catch((e) => {
-        
         return false;
       });
   }
@@ -264,15 +247,10 @@ export class UsersService extends TypeOrmCrudService<User> {
     const user = await this.usersRepository.findOne({
       where: { email: email },
     });
-    
 
     if (user && user.resetToken === token) {
-      
-
       return true;
     } else {
-      
-
       return false;
     }
   }
@@ -281,25 +259,19 @@ export class UsersService extends TypeOrmCrudService<User> {
     const user = await this.usersRepository.findOne({
       where: { email: email },
     });
-    
+
     if (user) {
       const salt = await bcript.genSalt();
-      
+
       user.salt = salt;
       user.password = await this.hashPassword(password, salt);
-      
 
       await this.usersRepository.save(user);
 
-      
-
       await this.updateChnagePasswordToken(user.id, '');
-
-      
 
       return true;
     }
-    
 
     return false;
   }
@@ -313,7 +285,6 @@ export class UsersService extends TypeOrmCrudService<User> {
     filterText: string,
     userTypeId: number,
   ): Promise<Pagination<User>> {
-    
     let filter = '';
 
     if (filterText != null && filterText != undefined && filterText != '') {
@@ -358,7 +329,6 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async findUserByUserType() {
-    
     const data = await this.repo
       .createQueryBuilder('u')
       .select('*')

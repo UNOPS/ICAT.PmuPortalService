@@ -85,7 +85,7 @@ export class CountryController implements CrudController<Country> {
     dto.isSystemUse = true;
 
     let x = 0;
-    
+
     dto.countrysector.map((a) => {
       a.country.id = dto.id;
       a.sector.id = dto.countrysector[x].sector.id;
@@ -96,9 +96,7 @@ export class CountryController implements CrudController<Country> {
       dto.countrysector.map(async (a) => {
         const lms = await this.CountrySectorRepo.save(await a);
       });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
 
     const coun = await this.base.createOneBase(req, dto);
 

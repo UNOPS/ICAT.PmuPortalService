@@ -23,11 +23,7 @@ export class EmailNotificationService {
         text: text,
         html: emailTemplate,
       })
-      .then((res) => {
-        
-      })
-      .catch((e) => {
-        
-      });
+      .then((res) => {})
+      .catch((e) => {});
   }
 }

@@ -22,8 +22,7 @@ export class SectorService extends TypeOrmCrudService<Sector> {
     let filter = '';
 
     if (filterText != null && filterText != undefined && filterText != '') {
-      filter =
-        '(sr.name LIKE :filterText OR sr.description LIKE :filterText)';
+      filter = '(sr.name LIKE :filterText OR sr.description LIKE :filterText)';
     }
 
     const data = this.repo

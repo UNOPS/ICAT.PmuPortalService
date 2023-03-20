@@ -14,8 +14,6 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    
-
     const user = await this.usersService.findByUserName(username);
     if (user && user.password === pass) {
       const { password, ...result } = user;
@@ -25,7 +23,6 @@ export class AuthService {
   }
 
   async login(authCredentialDto: AuthCredentialDto): Promise<any> {
-    
     const { username, password } = authCredentialDto;
 
     if (await this.usersService.validateUser(username, password)) {
@@ -45,7 +42,7 @@ export class AuthService {
 
       const expiresIn = '240h';
       const token = this.jwtService.sign(payload, { expiresIn });
-      
+
       return { access_token: token };
     } else {
       return null;

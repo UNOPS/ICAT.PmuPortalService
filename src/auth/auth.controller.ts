@@ -27,10 +27,7 @@ export class AuthController {
 
   @Post('auth/login')
   async login(@Body() authCredentialDto: AuthCredentialDto): Promise<any> {
-    
     this.username = authCredentialDto.username;
-
-    
 
     const audit: AuditDto = new AuditDto();
     audit.action = authCredentialDto.username + ' Is Logged';
@@ -39,7 +36,6 @@ export class AuthController {
     audit.userName = authCredentialDto.username;
 
     this.auditService.create(audit);
-    
 
     return await this.authService.login(authCredentialDto);
   }
@@ -49,23 +45,17 @@ export class AuthController {
     @Param('email') email: string,
     @Param('token') token: string,
   ): Promise<boolean> {
-    
-
     return await this.usersService.validateResetPasswordRequest(email, token);
   }
 
   @Put('auth/reset-password')
   async resetPassword(@Body() resetPwd: ResetPassword): Promise<boolean> {
-    
-
     if (
       await this.usersService.validateResetPasswordRequest(
         resetPwd.email,
         resetPwd.token,
       )
     ) {
-      
-
       const res = await this.usersService.resetPassword(
         resetPwd.email,
         resetPwd.password,
@@ -81,9 +71,7 @@ export class AuthController {
     @Body() forgotparam: ForgotPasswordDto,
     @Res() response: any,
   ): Promise<any> {
-    
     let user = await this.usersService.findUserByEmail(forgotparam.email);
-    
 
     if (!user) {
       const errorResponse: any = {
@@ -100,11 +88,7 @@ export class AuthController {
       pwdRestToken,
     );
 
-    
-
-    const resetPwdUrl = this.configService.get<string>('PWD_RESET_URL');
-
-    
+    const resetPwdUrl = process.env.PMU_LOGIN_URL;
 
     return response.status(200).send(true);
   }

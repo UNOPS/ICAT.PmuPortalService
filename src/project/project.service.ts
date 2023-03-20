@@ -166,7 +166,7 @@ export class ProjectService extends TypeOrmCrudService<Project> {
       .orderBy('dr.createdOn', 'ASC');
 
     const result = await paginate(data, options);
-    
+
     if (result) {
       return result;
     }

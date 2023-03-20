@@ -19,9 +19,7 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
   }
 
   saveDocument(doc: Documents) {
-    return this.repo.save(doc).catch((error) => {
-      
-    });
+    return this.repo.save(doc).catch((error) => {});
   }
 
   deleteDocument(docId: number) {
@@ -31,16 +29,14 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
         .then((res) => {
           this.deleteFile(val.relativePath);
         })
-        .catch((error) => {
-          
-        });
+        .catch((error) => {});
     });
   }
 
   deleteFile(filepath: string) {
     const rootPath = path.resolve('./');
     const fullfilePath = join(rootPath, statticFileLocation, filepath);
-    
+
     if (fs.existsSync(fullfilePath)) {
       fs.unlinkSync(fullfilePath);
     }
@@ -54,10 +50,9 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
     const documenst = await this.repo.find({
       where: { documentOwnerId: oid, documentOwner: owner },
     });
-    const base = this.configService.get<string>('baseUrl');
+    const base = process.env.BASE_URL;
     documenst.forEach((a) => {
       a.url = `${base}document/downloadDocument/attachment/${a.id}`;
-      
     });
 
     return documenst;

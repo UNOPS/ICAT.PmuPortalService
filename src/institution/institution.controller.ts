@@ -113,14 +113,11 @@ export class InstitutionController implements CrudController<Institution> {
   ): Promise<Institution> {
     const institution = await this.base.createOneBase(req, dto);
 
-    
-
     const audit: AuditDto = new AuditDto();
     audit.action = institution.name + ' Institution created';
     audit.comment = 'Institution Created';
     audit.actionStatus = 'Created';
     this.auditService.create(audit);
-    
 
     dto.countries.map((a) => {
       const insttemp = new Institution();
@@ -132,9 +129,7 @@ export class InstitutionController implements CrudController<Institution> {
       dto.countries.map(async (a) => {
         const ins = await this.countryRepo.save(await a);
       });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
 
     return institution;
   }
@@ -154,7 +149,6 @@ export class InstitutionController implements CrudController<Institution> {
     audit.actionStatus = 'Updated';
 
     await this.auditService.create(audit);
-    
 
     return institution;
   }

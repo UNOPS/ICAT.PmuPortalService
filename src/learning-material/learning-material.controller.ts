@@ -98,7 +98,6 @@ export class LearningMaterialController
     @ParsedRequest() req: CrudRequest,
     @ParsedBody() dto: LearningMaterial,
   ): Promise<LearningMaterial> {
-
     const lm = await this.base.createOneBase(req, dto);
 
     dto.learningMaterialsector.map((a) => {
@@ -109,9 +108,7 @@ export class LearningMaterialController
       dto.learningMaterialsector.map(async (a) => {
         const lms = await this.LearningMaterialSectorRepo.save(await a);
       });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
 
     dto.learningMaterialusertype.map((b) => {
       b.learningMaterial.id = lm.id;
@@ -124,12 +121,9 @@ export class LearningMaterialController
           b.userType = null;
         }
 
-        
         const lmus = await this.LearningMaterialUserTypeRepo.save(await b);
       });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
 
     return lm;
   }

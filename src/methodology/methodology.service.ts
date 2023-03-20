@@ -37,7 +37,6 @@ export class MethodologyService extends TypeOrmCrudService<Methodology> {
     }
 
     if (developedBy != '0') {
-      
       if (filter) {
         filter = `${filter} and me.developedBy=:developedBy`;
       } else {

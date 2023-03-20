@@ -8,8 +8,7 @@ import { ProjectApprovalStatusService } from './project-approval-status.service'
     type: ProjectApprovalStatus,
   },
   query: {
-    join: {
-    },
+    join: {},
   },
 })
 @Controller('project-approval-status')
