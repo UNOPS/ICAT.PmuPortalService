@@ -7,19 +7,10 @@ import { MitigationActionService } from './mitigation-action.service';
   model: {
     type: MitigationActionType,
   },
-  // query: {
-  //     join: {
-
-  //     },
-  // },
 })
 @Controller('mitigation-action')
 export class MitigationActionController
   implements CrudController<MitigationActionType>
 {
   constructor(public service: MitigationActionService) {}
-
-  // get base(): CrudController<MitigationAction> {
-  //   return this;
-  // }
 }

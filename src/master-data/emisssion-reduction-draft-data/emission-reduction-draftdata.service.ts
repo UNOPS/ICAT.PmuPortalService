@@ -6,7 +6,10 @@ import { EmissionReductioDraftDataEntity } from './entity/emission-reductio-draf
 
 @Injectable()
 export class EmissionReductionDraftdataService extends TypeOrmCrudService<EmissionReductioDraftDataEntity> {
-    constructor(@InjectRepository(EmissionReductioDraftDataEntity) repo: Repository<EmissionReductioDraftDataEntity>) {
-        super(repo);
-      }
+  constructor(
+    @InjectRepository(EmissionReductioDraftDataEntity)
+    repo: Repository<EmissionReductioDraftDataEntity>,
+  ) {
+    super(repo);
+  }
 }

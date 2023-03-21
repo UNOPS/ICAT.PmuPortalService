@@ -1,5 +1,3 @@
-import { ApiProperty, ApiBody } from '@nestjs/swagger';
-import { type } from 'os';
 import { Country } from 'src/country/entity/country.entity';
 import { Institution } from 'src/institution/institution.entity';
 import { FinancingScheme } from 'src/master-data/financing-scheme/financing-scheme.entity';
@@ -10,7 +8,6 @@ import { ProjectApprovalStatus } from 'src/master-data/project-approval-status/p
 import { ProjectOwner } from 'src/master-data/project-owner/projeect-owner.entity';
 import { ProjectStatus } from 'src/master-data/project-status/project-status.entity';
 import { Sector } from 'src/master-data/sector/sector.entity';
-
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
 
 import {
@@ -18,15 +15,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity({ name: 'climateAction' })
 export class Project extends BaseTrackingEntity {
-  /**
-   *
-   */
   constructor() {
     super();
     this.createdBy = '';
@@ -90,8 +83,6 @@ export class Project extends BaseTrackingEntity {
   @ManyToOne((type) => ProjectOwner, { cascade: false })
   @JoinColumn()
   projectOwner?: ProjectOwner;
-
-
 
   @Column({ default: null })
   acceptedDate: Date;
@@ -188,8 +179,6 @@ export class Project extends BaseTrackingEntity {
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: null })
   expectedRecurrentExpenditure;
-
-  //For mistgation actions - related to climate action table in future
 
   @ManyToOne((type) => MitigationActionType, { cascade: false })
   @JoinColumn()

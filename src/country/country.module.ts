@@ -9,9 +9,9 @@ import { CountrySector } from './entity/country-sector.entity';
 import { Country } from './entity/country.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Country,CountrySector,Audit,User])],
-    controllers: [CountryController],
-    providers: [CountryService,CountrySector,AuditService],
-    exports: [CountryService],
+  imports: [TypeOrmModule.forFeature([Country, CountrySector, Audit, User])],
+  controllers: [CountryController],
+  providers: [CountryService, CountrySector, AuditService],
+  exports: [CountryService],
 })
 export class CountryModule {}
