@@ -66,7 +66,7 @@ $ gcloud builds submit --tag [CONTAINER PATH]
    - Select the application region
    - Select `Allow unauthenticated invocations` in the Authentication option
    - In the **Container section**:
-     - Select Container port 8080
+     - Select Container port 8083
      - Add the Environment Variables
      - Add the Cloud SQL connections
 
