@@ -113,7 +113,6 @@ export class ProjectController implements CrudController<Project> {
       filterText,
       projectStatusId,
       projectApprovalStatusId,
-
       countryId,
       sectorId,
     );
