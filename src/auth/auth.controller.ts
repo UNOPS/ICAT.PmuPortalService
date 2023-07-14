@@ -56,9 +56,12 @@ export class AuthController {
         resetPwd.token,
       )
     ) {
-      const res = await this.usersService.resetPassword(
+      console.log('is valid');
+
+      let res = await this.usersService.resetPassword(
         resetPwd.email,
         resetPwd.password,
+        resetPwd.code,
       );
 
       return res;
