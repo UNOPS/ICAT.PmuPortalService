@@ -2,7 +2,7 @@
 /dist
 /node_modules
 /src/migrations
-
+/static-files
 # Logs
 logs
 *.log

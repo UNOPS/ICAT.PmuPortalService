@@ -18,6 +18,7 @@ import { Country } from 'src/country/entity/country.entity';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { InstitutionCategory } from 'src/institution/institution.category.entity';
 import { InstitutionType } from 'src/institution/institution.type.entity';
+import { use } from 'passport';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -42,7 +43,7 @@ export class UsersService extends TypeOrmCrudService<User> {
   async create(createUserDto: CreateUserDto): Promise<User> {
     //console.log("CreateUser=====",createUserDto.institution['id'])
     //console.log("CreateUserwwwwww=====",createUserDto.userType['id'])
-    console.log("CreateUserYYY=====",createUserDto)
+    console.log("CreateUserYYY=====", createUserDto)
 
     let userType = await this.usersTypeRepository.findOne(
       createUserDto.userType['id'],
@@ -50,36 +51,36 @@ export class UsersService extends TypeOrmCrudService<User> {
 
     // let institution;
     // if(createUserDto.userType['id'] == 3)
-    
+
     // {
-      
+
     //    institution = await this.institutionRepository.findOne(
     //     createUserDto.institution['id'],
     //   );
-  
+
     // }
     let countryId = null;
     let insId = null;
-    if(createUserDto.userType['id'] == 3){
+    if (createUserDto.userType['id'] == 3) {
       console.log("okkkkkkkk")
       countryId = null;
       insId = createUserDto.institution['id'];
-      console.log("Hi==",countryId)  
+      console.log("Hi==", countryId)
     }
-    else if(createUserDto.userType['id'] == 2){
+    else if (createUserDto.userType['id'] == 2) {
       countryId = createUserDto.country['id'];
       insId = 0;
       let cou = await this.countryRepo.findOne(countryId);
-      cou.isCA =true;
+      cou.isCA = true;
       this.countryRepo.save(cou)
     }
 
-    else if(createUserDto.userType['id'] == 1){
+    else if (createUserDto.userType['id'] == 1) {
       countryId = null;
       insId = createUserDto.institution['id'];
     }
 
-    else if(createUserDto.userType['id'] == 5){
+    else if (createUserDto.userType['id'] == 5) {
       countryId = null;
       insId = createUserDto.institution['id'];
     }
@@ -92,7 +93,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     //To-do get country id from current context
 
     // let countryId = createUserDto.country['id'];
-   // let countryId = 1;
+    // let countryId = 1;
     let country = await this.countryRepo.findOne(countryId);
 
     let newUser = new User();
@@ -121,14 +122,15 @@ export class UsersService extends TypeOrmCrudService<User> {
 
     var newUserDb = await this.usersRepository.save(newUser);
     // get an environment variable
-    let systemLoginUrl='';
-    if(newUser.userType.id ==2){
-      let url= "https://icat-ca-tool.climatesi.com/icat-country-app/"
-       systemLoginUrl = url//this.configService.get<string>("https://icat-ca-tool.climatesi.com/icat-country-app/");
+    let systemLoginUrl = '';
+    if (newUser.userType.id == 2) {
+      let url = "https://icat-ca-tool.climatesi.com/icat-country-app/reset-password"
+      systemLoginUrl = url//this.configService.get<string>("https://icat-ca-tool.climatesi.com/icat-country-app/");
     }
-    else{
-      let url= "https://icat-ca-tool.climatesi.com/pmu-app/login"
-       systemLoginUrl =url// this.configService.get<string>('LOGIN_URL');
+    else {
+      // let url = "http://localhost:4200/reset-password"
+      let url= "https://icat-ca-tool.climatesi.com/pmu-app/reset-password"
+      systemLoginUrl = url// this.configService.get<string>('LOGIN_URL');
     }
 
     var template =
@@ -138,11 +140,11 @@ export class UsersService extends TypeOrmCrudService<User> {
       newUserDb.lastName +
       ' <br/>Your username is ' +
       newUserDb.email +
-      ' and your login password is : ' +
+      '<br/> your login Code is : ' +
       newPassword +
-      ' <br/>System login url is'+' <a href="' +systemLoginUrl + '">'+systemLoginUrl+'</a>'+
+      ' <br/>System login url is' + ' <a href="' + systemLoginUrl + '">' + systemLoginUrl + '</a>' +
       '<br/>' +
-      '<br/>Best regards'+ 
+      '<br/>Best regards' +
       '<br/>Software support team';
 
     // sned email with new password
@@ -165,7 +167,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     user.status = status;
     return this.usersRepository.save(user);
   }
-  
+
   async chnagePassword(userId: number, newPassword: string): Promise<User> {
     let user = await this.usersRepository.findOne(userId);
     user.password = newPassword;
@@ -185,17 +187,17 @@ export class UsersService extends TypeOrmCrudService<User> {
       user.password,
       user.salt,
     );
-    user.password =newPassword;
+    user.password = newPassword;
     this.usersRepository.save(user);
 
     var template =
-    'Dear ' + user.firstName +" "+ user.lastName+
-    ' <br/>Your username is ' +
-    user.email +
-    '<br/> your login password is : ' +
-    newPassword +
-    ' <br/>System login url is ' +'<a href="systemLoginUrl">'+
-    systemLoginUrl;
+      'Dear ' + user.firstName + " " + user.lastName +
+      ' <br/>Your username is ' +
+      user.email +
+      '<br/> your login password is : ' +
+      newPassword +
+      ' <br/>System login url is ' + '<a href="systemLoginUrl">' +
+      systemLoginUrl;
 
     this.emaiService.sendMail(
       user.email,
@@ -203,12 +205,12 @@ export class UsersService extends TypeOrmCrudService<User> {
       '',
       template,
     );
-  
+
     return this.usersRepository.save(user);
   }
 
   async findAll(): Promise<User[]> {
-    console.log("urepo====",this.usersRepository.find())
+    console.log("urepo====", this.usersRepository.find())
     return this.usersRepository.find();
   }
 
@@ -310,25 +312,81 @@ export class UsersService extends TypeOrmCrudService<User> {
     }
   }
 
-  async resetPassword(email: string, password: string): Promise<boolean> {
+  async resetPassword(email: string, password: string,code: string): Promise<boolean> {
+    let systemLoginUrl;
     let user = await this.usersRepository.findOne({ email: email });
-    console.log(user);
+    if (user.userType.id == 2) {
+      let url = "https://icat-ca-tool.climatesi.com/icat-country-app/"
+      systemLoginUrl = url//this.configService.get<string>("https://icat-ca-tool.climatesi.com/icat-country-app/");
+    }
+    else {
+      // let url = "http://localhost:4200/reset-password"
+      let url= "https://icat-ca-tool.climatesi.com/pmu-app/login"
+      systemLoginUrl = url// this.configService.get<string>('LOGIN_URL');
+    }
+    // console.log(user);
     if (user) {
-      let salt = await bcript.genSalt();
-      console.log('password', password, 'salt', salt);
-      user.salt = salt;
-      user.password = await this.hashPassword(password, salt);
-      console.log('inside success');
+      if (code) {
+        const hashPassword = await bcript.hash(code, user.salt);
+        if(hashPassword ==user.password){
+          let salt = await bcript.genSalt();
+          console.log('password', password, 'salt', salt);
+          user.salt = salt;
+          user.password = await this.hashPassword(
+            password,
+            user.salt,
+          );
+          await this.usersRepository.save(user);  
+          var template =
+            'Dear ' + user.firstName + " " + user.lastName +
+            ' <br/>Your username is ' +
+            user.email +
+            '<br/> your login password is : ' +
+            password +
+            ' <br/>System login url is ' + '<a href="systemLoginUrl">' +
+            systemLoginUrl;
+    
+          this.emaiService.sendMail(
+            user.email,
+            'Your credentials for ICAT system',
+            '',
+            template,
+          );
+    
+          return true;
+        }
+  
+        return false;
+      }
 
-      await this.usersRepository.save(user);
+      else{
+        let salt = await bcript.genSalt();
+        user.salt = salt;
+        user.password = await this.hashPassword(
+          password,
+          user.salt,
+        );
+        await this.usersRepository.save(user);  
+        var template =
+          'Dear ' + user.firstName + " " + user.lastName +
+          ' <br/>Your username is ' +
+          user.email +
+          '<br/> your login password is : ' +
+          password +
+          ' <br/>System login url is ' + '<a href="systemLoginUrl">' +
+          systemLoginUrl;
+  
+        this.emaiService.sendMail(
+          user.email,
+          'Your credentials for ICAT system',
+          '',
+          template,
+        );
+  
+        return true;
+      }
 
-      console.log('inside success2');
-
-      await this.updateChnagePasswordToken(user.id, ''); // clean the tocken
-
-      console.log('inside success3');
-
-      return true;
+     
     }
     console.log('inside fail');
 
@@ -341,7 +399,7 @@ export class UsersService extends TypeOrmCrudService<User> {
 
 
   async getUserDetails(
-    
+
     options: IPaginationOptions,
     filterText: string,
     userTypeId: number,
@@ -349,51 +407,51 @@ export class UsersService extends TypeOrmCrudService<User> {
     console.log('calling......')
     let filter: string = '';
 
-    if(filterText != null && filterText != undefined && filterText != ''){
-      filter = 
-      '(user.firstName LIKE :filterText OR user.lastName LIKE :filterText OR user.telephone LIKE :filterText OR user.email LIKE :filterText OR ins.name LIKE :filterText OR type.name LIKE :filterText)'
+    if (filterText != null && filterText != undefined && filterText != '') {
+      filter =
+        '(user.firstName LIKE :filterText OR user.lastName LIKE :filterText OR user.telephone LIKE :filterText OR user.email LIKE :filterText OR ins.name LIKE :filterText OR type.name LIKE :filterText)'
     }
 
-    if(userTypeId !=0){
-      if(filter){
+    if (userTypeId != 0) {
+      if (filter) {
         filter = `${filter} and user.userTypeId = :userTypeId`;
-      }else{
+      } else {
         filter = `user.userTypeId = :userTypeId`;
       }
     }
 
     let data = this.repo
-    .createQueryBuilder('user')
-    .leftJoinAndMapOne('user.institution', Institution, 'ins','ins.id = user.institutionId',)
-    .leftJoinAndMapOne('user.userType', UserType, 'type', 'type.id = user.userTypeId',)
-    // .leftJoinAndMapOne('user.country',Country, 'con',)
+      .createQueryBuilder('user')
+      .leftJoinAndMapOne('user.institution', Institution, 'ins', 'ins.id = user.institutionId',)
+      .leftJoinAndMapOne('user.userType', UserType, 'type', 'type.id = user.userTypeId',)
+      // .leftJoinAndMapOne('user.country',Country, 'con',)
 
-    .where(filter, {
-      filterText: `%${filterText}%`,
-      userTypeId,
-    }).orderBy('user.status','ASC');
+      .where(filter, {
+        filterText: `%${filterText}%`,
+        userTypeId,
+      }).orderBy('user.status', 'ASC');
 
     let resualt = await paginate(data, options);
 
-    if(resualt){
-    //  console.log('reaslt...',resualt)
+    if (resualt) {
+      //  console.log('reaslt...',resualt)
       return resualt;
     }
   }
 
   async findUserByUserType() {
-    console.log("sssssssss " );
-    let data =await this.repo
-    .createQueryBuilder('u')
-    .select('*')
-    .where(
-      'u.userTypeId = 2'
-    ).execute();
+    console.log("sssssssss ");
+    let data = await this.repo
+      .createQueryBuilder('u')
+      .select('*')
+      .where(
+        'u.userTypeId = 2'
+      ).execute();
     // console.log("sssssssss ",data.execute() );
     return data;
   }
 
-  
+
 
 }
 
