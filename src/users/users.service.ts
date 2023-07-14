@@ -146,6 +146,7 @@ export class UsersService extends TypeOrmCrudService<User> {
       '<br/>' +
       '<br/>Best regards' +
       '<br/>Software support team';
+      
 
     // sned email with new password
     this.emaiService.sendMail(
