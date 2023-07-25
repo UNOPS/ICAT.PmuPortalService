@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { count } from 'console';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
@@ -41,7 +40,6 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    console.log("CreateUserYYY=====", createUserDto)
 
     let userType = await this.usersTypeRepository.findOne(
       createUserDto.userType['id'],
@@ -51,10 +49,8 @@ export class UsersService extends TypeOrmCrudService<User> {
     let countryId = null;
     let insId = null;
     if (createUserDto.userType['id'] == 3) {
-      console.log("okkkkkkkk")
       countryId = null;
       insId = createUserDto.institution['id'];
-      console.log("Hi==", countryId)
     }
     else if (createUserDto.userType['id'] == 2) {
       countryId = createUserDto.country['id'];
@@ -108,12 +104,12 @@ export class UsersService extends TypeOrmCrudService<User> {
     var newUserDb = await this.usersRepository.save(newUser);
     let systemLoginUrl = '';
     if (newUser.userType.id == 2) {
-      let url = "https://icat-ca-tool.climatesi.com/icat-country-app/reset-password"
-      systemLoginUrl = url//this.configService.get<string>("https://icat-ca-tool.climatesi.com/icat-country-app/");
+      const url = process.env.COUNTRY_RESET_PASSWORD_URL;
+      systemLoginUrl = url;
     }
     else {
-      let url= "https://icat-ca-tool.climatesi.com/pmu-app/reset-password"
-      systemLoginUrl = url// this.configService.get<string>('LOGIN_URL');
+      const url = process.env.PMU_RESET_PASSWORD_URL
+      systemLoginUrl = url;
     }
 
     var template =
@@ -160,7 +156,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     userId: number,
     newToken: string,
   ): Promise<User> {
-    let systemLoginUrl = this.configService.get<string>('LOGIN_URL');
+    let systemLoginUrl = this.configService.get<string>('PMU_LOGIN_URL');
     let user = await this.usersRepository.findOne(userId);
     user.resetToken = newToken;
     let newUUID = uuidv4();
@@ -192,7 +188,6 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async findAll(): Promise<User[]> {
-    console.log("urepo====", this.usersRepository.find())
     return this.usersRepository.find();
   }
 
@@ -203,7 +198,6 @@ export class UsersService extends TypeOrmCrudService<User> {
   async validateUser(userName: string, password: string): Promise<boolean> {
     const user = await this.usersRepository.findOne({ username: userName });
 
-    console.log(user);
 
     return (await user).validatePassword(password);
   }
@@ -269,7 +263,6 @@ export class UsersService extends TypeOrmCrudService<User> {
 
       return true;
     } else {
-      console.log('in else');
 
       return false;
     }
@@ -279,12 +272,11 @@ export class UsersService extends TypeOrmCrudService<User> {
     let systemLoginUrl;
     let user = await this.usersRepository.findOne({ email: email });
     if (user.userType.id == 2) {
-      let url = "https://icat-ca-tool.climatesi.com/icat-country-app/"
-      systemLoginUrl = url//this.configService.get<string>("https://icat-ca-tool.climatesi.com/icat-country-app/");
+      const url = process.env.COUNTRY_LOGIN_URL;
     }
     else {
-      let url= "https://icat-ca-tool.climatesi.com/pmu-app/login"
-      systemLoginUrl = url// this.configService.get<string>('LOGIN_URL');
+      const url = process.env.PMU_LOGIN_URL;
+      systemLoginUrl = url;
     }
     if (user) {
       if (code) {
@@ -363,7 +355,6 @@ export class UsersService extends TypeOrmCrudService<User> {
     filterText: string,
     userTypeId: number,
   ): Promise<Pagination<User>> {
-    console.log('calling......')
     let filter: string = '';
 
     if (filterText != null && filterText != undefined && filterText != '') {
@@ -383,7 +374,6 @@ export class UsersService extends TypeOrmCrudService<User> {
       .createQueryBuilder('user')
       .leftJoinAndMapOne('user.institution', Institution, 'ins', 'ins.id = user.institutionId',)
       .leftJoinAndMapOne('user.userType', UserType, 'type', 'type.id = user.userTypeId',)
-      // .leftJoinAndMapOne('user.country',Country, 'con',)
 
       .where(filter, {
         filterText: `%${filterText}%`,
@@ -393,13 +383,11 @@ export class UsersService extends TypeOrmCrudService<User> {
     let resualt = await paginate(data, options);
 
     if (resualt) {
-      //  console.log('reaslt...',resualt)
       return resualt;
     }
   }
 
   async findUserByUserType() {
-<<<<<<< HEAD
     const data = await this.repo
       .createQueryBuilder('u')
       .select('*')
@@ -408,20 +396,3 @@ export class UsersService extends TypeOrmCrudService<User> {
     return data;
   }
 }
-=======
-    console.log("sssssssss ");
-    let data = await this.repo
-      .createQueryBuilder('u')
-      .select('*')
-      .where(
-        'u.userTypeId = 2'
-      ).execute();
-    // console.log("sssssssss ",data.execute() );
-    return data;
-  }
-
-
-
-}
-
->>>>>>> 5fa918002f0e9bfb16af769eb85e5faa6ef3b36c
