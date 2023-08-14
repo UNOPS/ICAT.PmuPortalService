@@ -26,8 +26,11 @@ $ npm install --force
 
 5. Set up the Environment Variables
 
-   - **Windows:** using the `set` command in the terminal
-   - **Linux/MacOS:** using the `export` command in the terminal
+   - In the machine:
+      - **Windows:** using the `set` command in the terminal
+      - **Linux/MacOS:** using the `export` command in the terminal
+
+   - Or creating a `.env` file using `.env.example` as base
 
 6. Run the app:
 
@@ -76,17 +79,23 @@ $ gcloud builds submit --tag [CONTAINER PATH]
 
 The environment variables should be declared as follow:
 
-| Variable name       | Description                    |
-| ------------------- | ------------------------------ |
-| `SOCKET_PATH`       | Database Socket Path           |
-| `DATABASE_PORT`     | Database Port                  |
-| `DATABASE_USER`     | Database Socket User           |
-| `DATABASE_PASSWORD` | Database Password              |
-| `DATABASE_NAME`     | Database Name                  |
-| `BASE_URL`          | Current Application URL        |
-| `CLIENT_URL`        | PMU Service Web URL            |
-| `PWD_RESET_URL`     | PMU Service Web URL + `/login` |
-| `COUNTRY_LOGIN_URL` | Country Service Web URL        |
+| Variable name                | Description                                  |
+| ---------------------------- | -------------------------------------------- |
+| `PORT`                       | Application Port                             |
+| `DATABASE_HOST`              | Database Host(*)                             |
+| `SOCKET_PATH`                | Database Socket Path(*)                      |
+| `DATABASE_PORT`              | Database Port                                |
+| `DATABASE_USER`              | Database Socket User                         |
+| `DATABASE_PASSWORD`          | Database Password                            |
+| `DATABASE_NAME`              | Database Name                                |
+| `BASE_URL`                   | Current Application URL                      |
+| `CLIENT_URL`                 | PMU Service Web URL                          |
+| `PMU_LOGIN_URL`              | PMU Service Web URL + `/login`               |
+| `COUNTRY_LOGIN_URL`          | Country Service Web URL + `/login`           |
+| `PMU_RESET_PASSWORD_URL`     | PMU Service Web URL + `/reset-password`      |
+| `COUNTRY_RESET_PASSWORD_URL` | Country Service Web URL + `/reset-password`  |
+
+> (*) Can be used the Database Host or the Database Socket Path depending of the database configuration
 
 ## API Documentation
 
