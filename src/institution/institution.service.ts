@@ -109,7 +109,8 @@ export class InstitutionService extends TypeOrmCrudService<Institution> {
         .where(filter, {
           filterText: `%${filterText}%`,
         })
-        .orderBy('ins.status', 'ASC');
+        .orderBy('ins.status', 'ASC')
+        .groupBy('ins.id');
       const result = await paginate(data, options);
 
       if (result) {
