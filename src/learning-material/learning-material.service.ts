@@ -21,7 +21,6 @@ export class LearningMaterialService extends TypeOrmCrudService<LearningMaterial
     this.repo.softDelete({ id });
     return;
   }
-
   async getlearningmaterialdetails(
     options: IPaginationOptions,
     filterText: string,
@@ -30,7 +29,7 @@ export class LearningMaterialService extends TypeOrmCrudService<LearningMaterial
     sortOrder: number,
     sortType: number,
   ): Promise<Pagination<LearningMaterial>> {
-    let filter = '';
+    let filter: string = '';
 
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
@@ -53,36 +52,19 @@ export class LearningMaterialService extends TypeOrmCrudService<LearningMaterial
       }
     }
 
-    let val: string;
-    const data = this.repo;
 
     if (sortOrder == 0) {
       if (sortType == 0) {
-        val = 'lm.editedOn';
-      } else {
-        val = 'lm.documentName';
+        var val = 'lm.editedOn';
       }
-
-      data
+      else {
+        var val = 'lm.documentName';
+      }
+      var data = this.repo
         .createQueryBuilder('lm')
-        .leftJoinAndMapMany(
-          'lm.learningMaterialUserType',
-          LearningMaterialUserType,
-          'lmu',
-          'lmu.learningMaterialId = lm.Id',
-        )
-        .leftJoinAndMapMany(
-          'lm.userType',
-          UserType,
-          'ut',
-          'lmu.userTypeId = ut.Id',
-        )
-        .leftJoinAndMapMany(
-          'lm.learningMaterialSector',
-          LearningMaterialSector,
-          'lms',
-          'lms.learningMaterial2Id = lm.Id',
-        )
+        .leftJoinAndMapMany('lm.learningMaterialUserType', LearningMaterialUserType, 'lmu', 'lmu.learningMaterialId = lm.Id')
+        .leftJoinAndMapMany('lm.userType', UserType, 'ut', 'lmu.userTypeId = ut.Id')
+        .leftJoinAndMapMany('lm.learningMaterialSector', LearningMaterialSector, 'lms', 'lms.learningMaterial2Id = lm.Id')
         .leftJoinAndMapMany('lm.sector', Sector, 'st', 'lms.sectorId = st.Id')
         .where(filter, {
           filterText: `%${filterText}%`,
@@ -90,32 +72,19 @@ export class LearningMaterialService extends TypeOrmCrudService<LearningMaterial
           sectorId,
         })
         .orderBy(val, 'DESC');
-    } else {
+    }
+    else {
       if (sortType == 0) {
-        val = 'lm.editedOn';
-      } else {
-        val = 'lm.documentName';
+        var val = 'lm.editedOn';
       }
-      data
+      else {
+        var val = 'lm.documentName';
+      }
+      var data = this.repo
         .createQueryBuilder('lm')
-        .leftJoinAndMapMany(
-          'lm.learningMaterialUserType',
-          LearningMaterialUserType,
-          'lmu',
-          'lmu.learningMaterialId = lm.Id',
-        )
-        .leftJoinAndMapMany(
-          'lm.userType',
-          UserType,
-          'ut',
-          'lmu.userTypeId = ut.Id',
-        )
-        .leftJoinAndMapMany(
-          'lm.learningMaterialSector',
-          LearningMaterialSector,
-          'lms',
-          'lms.learningMaterial2Id = lm.Id',
-        )
+        .leftJoinAndMapMany('lm.learningMaterialUserType', LearningMaterialUserType, 'lmu', 'lmu.learningMaterialId = lm.Id')
+        .leftJoinAndMapMany('lm.userType', UserType, 'ut', 'lmu.userTypeId = ut.Id')
+        .leftJoinAndMapMany('lm.learningMaterialSector', LearningMaterialSector, 'lms', 'lms.learningMaterial2Id = lm.Id')
         .leftJoinAndMapMany('lm.sector', Sector, 'st', 'lms.sectorId = st.Id')
         .where(filter, {
           filterText: `%${filterText}%`,
@@ -123,11 +92,14 @@ export class LearningMaterialService extends TypeOrmCrudService<LearningMaterial
           sectorId,
         })
         .orderBy(val, 'ASC');
+
     }
 
-    const result = await paginate(data, options);
-    if (result) {
-      return result;
+    let resualt = await paginate(data, options);
+    if (resualt) {
+      return resualt;
     }
   }
+
+
 }
