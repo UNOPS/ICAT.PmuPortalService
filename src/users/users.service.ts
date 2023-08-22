@@ -383,8 +383,8 @@ export class UsersService extends TypeOrmCrudService<User> {
 
     let result = await paginate(data, options);
 
-    if (resualt) {
-      return resualt;
+    if (result) {
+      return result;
     }
   }
 
