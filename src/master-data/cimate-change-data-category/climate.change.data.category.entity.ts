@@ -4,4 +4,5 @@ import { Sector } from '../sector/sector.entity';
 
 @Entity()
 export class ClimateChangeDataCategory extends MasterData {
+
 }

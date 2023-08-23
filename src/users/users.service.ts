@@ -380,6 +380,7 @@ export class UsersService extends TypeOrmCrudService<User> {
         userTypeId,
       }).orderBy('user.status', 'ASC');
 
+
     let result = await paginate(data, options);
 
     if (result) {
