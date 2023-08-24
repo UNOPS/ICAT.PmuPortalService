@@ -99,7 +99,7 @@ import { MethodologyDataController } from './master-data/methodology-data/method
 
         auth: {
           user: 'no-reply-icat-ca-tool@climatesi.com',
-          pass: '',
+          pass: 'ICAT2022tool',
         },
       },
       defaults: {

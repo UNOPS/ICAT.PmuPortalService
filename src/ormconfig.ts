@@ -23,10 +23,10 @@ import { ConnectionOptions } from 'typeorm';
 const config: ConnectionOptions = {
   type: 'mysql',
   socketPath: process.env.SOCKET_PATH,
-  port: Number(process.env.DATABASE_PORT),
-  username: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
+  port: 3306, // Number(process.env.DATABASE_PORT),
+  username: 'root',//process.env.DATABASE_USER,
+  password: 'pradeep123#',//process.env.DATABASE_PASSWORD,
+  database: 'icat_pmu',//process.env.DATABASE_NAME,
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
 
   // We are using migrations, synchronize should be set to false.
