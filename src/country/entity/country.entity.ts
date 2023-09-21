@@ -45,12 +45,16 @@ export class Country extends BaseTrackingEntity {
 
   @Column({ default: null })
   isMember: boolean;
+  @Column({ default: null })
+  isSingleCountry: boolean;
+  @Column({ default: null })
+  region: string;
 
   @Column({ default: null })
   countryStatus: countryStatus;
 
   @Column({ default: null })
-  region: string;
+  domain: string;
 
   @Column({ default: null })
   uniqueIdentification: string;
@@ -63,7 +67,7 @@ export class Country extends BaseTrackingEntity {
 
   @ManyToOne((type) => Institution, { eager: true })
   @JoinColumn()
-  institution?: Institution;
+  institution?: Institution |null;
 
   @Column({ default: null })
   climateActionModule: boolean;
