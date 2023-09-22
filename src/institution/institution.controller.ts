@@ -134,6 +134,19 @@ export class InstitutionController implements CrudController<Institution> {
     return institution;
   }
 
+  @Get(
+    'institution/institutiId',
+  )
+  async getInstitutionDetails(
+    @Request() request,
+    @Query('countryId') insId: number,
+  ): Promise<any> {
+    return await this.service.getInstitution(
+      insId
+    )
+
+  }
+
   @Override()
   @UseGuards(JwtAuthGuard)
   async updateOne(

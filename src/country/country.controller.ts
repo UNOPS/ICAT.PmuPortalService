@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   Crud,
@@ -112,6 +112,12 @@ export class CountryController implements CrudController<Country> {
   @Get('country1')
   async getCountry(@Query('countryId') countryId: number): Promise<any> {
     return await this.service.getCountry(countryId);
+  }
+  @Post('oneCountry')
+  async updatecountry(
+    @Body() dto: Country,
+  ){
+    this.CountryRepo.save(dto)
   }
 
   @Get('country-sector')
