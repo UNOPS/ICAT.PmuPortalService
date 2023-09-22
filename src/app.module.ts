@@ -48,6 +48,7 @@ import { ApplicabilityModule } from './master-data/applicability/applicability.m
 import { ApplicabilityController } from './master-data/applicability/applicability.controller';
 import { MethodologyDataModule } from './master-data/methodology-data/methodology-data.module';
 import { MethodologyDataController } from './master-data/methodology-data/methodology-data.controller';
+import { TokenDetails } from './token_details';
 
 @Module({
   imports: [
@@ -132,6 +133,6 @@ import { MethodologyDataController } from './master-data/methodology-data/method
 
     ApplicabilityController,
   ],
-  providers: [AppService],
+  providers: [AppService,TokenDetails],
 })
 export class AppModule {}

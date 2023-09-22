@@ -9,10 +9,18 @@ import {
 import { Methodology } from './entity/methodology.entity';
 import { Sector } from 'src/master-data/sector/sector.entity';
 import { Country } from 'src/country/entity/country.entity';
+import { User } from 'src/users/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class MethodologyService extends TypeOrmCrudService<Methodology> {
-  constructor(@InjectRepository(Methodology) repo) {
+  constructor(
+    @InjectRepository(Methodology) repo,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Country)
+    private readonly countryRepository: Repository<Country>,
+    ) {
     super(repo);
   }
 
@@ -21,12 +29,38 @@ export class MethodologyService extends TypeOrmCrudService<Methodology> {
     filterText: string,
     sectorId: number,
     developedBy: string,
+    userName: string,
+    role: string,
   ): Promise<Pagination<Methodology>> {
+
     let filter = '';
+    let newarray = new Array();
+    if(role =="PMU Admin"){
+      let user = await this.userRepository.findOne({
+        where: { email: userName },
+      });
+      let country = await this.countryRepository.find({where:{institution :user.institution}})
+      
+      for (let co of country) {
+        newarray.push(co.id)
+      }
+      if (filter) {
+        filter = `${filter} and me.countryId IN (:...newarray)`;
+      } else {
+        filter = 'me.countryId IN(:...newarray)';
+      }
+    }
+    
 
     if (filterText != null && filterText != undefined && filterText != '') {
-      filter =
-        '(me.version LIKE :filterText OR me.developedBy LIKE :filterText OR me.name LIKE :filterText OR me.applicableSector LIKE :filterText OR me.documents LIKE :filterText)';
+      if(filter){
+        filter =
+        `${filter} (and me.version LIKE :filterText OR me.developedBy LIKE :filterText OR me.name LIKE :filterText OR me.applicableSector LIKE :filterText OR me.documents LIKE :filterText)`;
+      }else{
+        filter =
+        `${filter} (me.version LIKE :filterText OR me.developedBy LIKE :filterText OR me.name LIKE :filterText OR me.applicableSector LIKE :filterText OR me.documents LIKE :filterText)`;
+      }
+  
     }
     if (sectorId != 0) {
       if (filter) {
@@ -62,6 +96,7 @@ export class MethodologyService extends TypeOrmCrudService<Methodology> {
         filterText: `%${filterText}%`,
         sectorId,
         developedBy,
+        newarray
       });
 
     const result = await paginate(data, options);
