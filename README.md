@@ -94,6 +94,10 @@ The environment variables should be declared as follow:
 | `COUNTRY_LOGIN_URL`          | Country Service Web URL + `/login`           |
 | `PMU_RESET_PASSWORD_URL`     | PMU Service Web URL + `/reset-password`      |
 | `COUNTRY_RESET_PASSWORD_URL` | Country Service Web URL + `/reset-password`  |
+| `SMTP_HOST`                  | SMTP E-mail server host                      |
+| `SMTP_PORT`                  | SMTP E-mail server port                      |  
+| `SMTP_USER`                  | SMTP E-mail server user                      |
+| `SMTP_PASS`                  | SMTP E-mail server password if requested     |
 
 > (*) Can be used the Database Host or the Database Socket Path depending of the database configuration
 
