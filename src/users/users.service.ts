@@ -133,8 +133,6 @@ export class UsersService extends TypeOrmCrudService<User> {
       template,
     );
 
-    newUserDb.password = '';
-    newUserDb.salt = '';
 
     return newUserDb;
   }
