@@ -94,17 +94,12 @@ import { TokenDetails } from './token_details';
     }),
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.office365.com',
+        host: 'smtp-relay.gmail.com',
         port: 587,
         secure: false,
-
-        auth: {
-          user: 'no-reply-icat-ca-tool@climatesi.com',
-          pass: 'ICAT2022tool',
-        },
       },
       defaults: {
-        from: '"Admin" <no-reply-icat-ca-tool@climatesi.com>',
+        from: '"Admin" <icat@unops.org>',
       },
     }),
     ServeStaticModule.forRoot({
