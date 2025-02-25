@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import { AuthCredentialDto } from './Dto/auth.credential.dto';
 import { ResetPassword } from './Dto/reset.password.dto';
-import { ForgotPasswordDto } from './Dto/forgot.passowrd.dto';
+import { ForgotPasswordDto } from './Dto/forgot.password.dto';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { AuditService } from 'src/audit/audit.service';
 import { AuditDto } from 'src/audit/dto/audit-dto';
