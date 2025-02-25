@@ -266,6 +266,23 @@ export class UsersService extends TypeOrmCrudService<User> {
     }
   }
 
+  async updateChangePasswordToken(
+    userId: string,
+    resetToken: string,
+    tokenExpiration: Date,
+  ): Promise<User> {
+    const user = await this.usersRepository.findOne(userId);
+    
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    user.resetToken = resetToken;
+    user.resetTokenExpiration = tokenExpiration;
+
+    return await this.usersRepository.save(user);
+  }
+
   async resetPassword(email: string, password: string,code: string): Promise<boolean> {
     let systemLoginUrl;
     let user = await this.usersRepository.findOne({ email: email });

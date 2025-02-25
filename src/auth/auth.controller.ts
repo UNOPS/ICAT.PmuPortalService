@@ -9,9 +9,7 @@ import { ForgotPasswordDto } from './Dto/forgot.passowrd.dto';
 import { EmailNotificationService } from 'src/notifications/email.notification.service';
 import { AuditService } from 'src/audit/audit.service';
 import { AuditDto } from 'src/audit/dto/audit-dto';
-
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs');
+import { v4 as uuidv4 } from 'uuid';
 
 @Controller('auth')
 export class AuthController {
@@ -74,24 +72,40 @@ export class AuthController {
     @Res() response: any,
   ): Promise<any> {
     let user = await this.usersService.findUserByEmail(forgotparam.email);
-
+  
     if (!user) {
-      const errorResponse: any = {
+      return response.status(400).send({
         status: 0,
-        message: 'Invalid Email/User Id',
-      };
-      return response.status(400).send(errorResponse);
+        message: 'Invalid Email/User ID',
+      });
     }
-
-    const pwdRestToken = uuidv4();
-
-    user = await this.usersService.updateChnagePasswordToken(
-      user.id,
-      pwdRestToken,
+  
+    const pwdResetToken = uuidv4();
+    const tokenExpiration = new Date();
+    tokenExpiration.setHours(tokenExpiration.getHours() + 1); // Expires in 1 hour
+  
+    await this.usersService.updateChangePasswordToken(user.id, pwdResetToken, tokenExpiration);
+      const resetPwdUrl = `${process.env.PMU_LOGIN_URL}/reset-password?token=${pwdResetToken}`;
+  
+    const emailTemplate = `
+      Dear ${user.firstName},<br/><br/>
+      We received a request to reset your password.<br/>
+      Please <a href="${resetPwdUrl}">click here</a> to reset your password.<br/>
+      This link will expire in 1 hour.<br/><br/>
+      If you did not request this, please ignore this email.
+    `;
+  
+    await this.emailService.sendMail(
+      user.email,
+      'Password Reset Request',
+      '',
+      emailTemplate
     );
-
-    const resetPwdUrl = process.env.PMU_LOGIN_URL;
-
-    return response.status(200).send(true);
+  
+    return response.status(200).send({
+      status: 1,
+      message: 'Password reset link has been sent to your email.',
+    });
   }
+  
 }
