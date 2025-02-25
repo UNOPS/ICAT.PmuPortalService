@@ -228,21 +228,8 @@ export class UsersService extends TypeOrmCrudService<User> {
         return 0;
       });
   }
-
-  async findUserByEmail(email: string): Promise<any> {
-    return await this.usersRepository
-      .findOne({ email: email })
-      .then((value) => {
-        if (!!value) {
-
-          return value;
-        } else {
-          return false;
-        }
-      })
-      .catch((e) => {
-        return false;
-      });
+  async findUserByEmail(email: string): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where: { email } });
   }
 
   async remove(id: number): Promise<void> {

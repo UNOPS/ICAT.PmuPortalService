@@ -84,7 +84,7 @@ export class AuthController {
     const tokenExpiration = new Date();
     tokenExpiration.setHours(tokenExpiration.getHours() + 1); // Expires in 1 hour
   
-    await this.usersService.updateChangePasswordToken(user.id, pwdResetToken, tokenExpiration);
+    await this.usersService.updateChangePasswordToken(user.id.toString(), pwdResetToken, tokenExpiration);
       const resetPwdUrl = `${process.env.PMU_LOGIN_URL}/reset-password?token=${pwdResetToken}`;
   
     const emailTemplate = `
