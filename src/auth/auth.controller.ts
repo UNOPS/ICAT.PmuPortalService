@@ -56,9 +56,7 @@ export class AuthController {
     ) {
 
       let res = await this.usersService.resetPassword(
-        resetPwd.email,
-        resetPwd.password,
-        resetPwd.code,
+        resetPwd
       );
 
       return res;

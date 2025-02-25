@@ -3,11 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
-import * as bcript from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { ResetPassword } from 'src/auth/Dto/reset.password.dto';
-import { RSA_PSS_SALTLEN_MAX_SIGN } from 'constants';
 import { UserType } from './user.type.entity';
-import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { Institution } from 'src/institution/institution.entity';
 import { RecordStatus } from 'src/shared/entities/base.tracking.entity';
@@ -15,10 +13,6 @@ import { EmailNotificationService } from 'src/notifications/email.notification.s
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Country } from 'src/country/entity/country.entity';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { InstitutionCategory } from 'src/institution/institution.category.entity';
-import { InstitutionType } from 'src/institution/institution.type.entity';
-import { use } from 'passport';
-
 const { v4: uuidv4 } = require('uuid');
 
 @Injectable()
@@ -90,7 +84,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.institution = institution;
     newUser.country = country;
     newUser.mrvInstitution = createUserDto.mrvInstitution;
-    newUser.salt = await bcript.genSalt();
+    newUser.salt = await bcrypt.genSalt();
 
     let newUUID = uuidv4();
     let newPassword = ('' + newUUID).substr(0, 6);
@@ -270,25 +264,17 @@ export class UsersService extends TypeOrmCrudService<User> {
     return await this.usersRepository.save(user);
   }
 
-  async resetPassword(email: string, password: string, token: string): Promise<boolean> {
+  async resetPassword(dto: ResetPassword): Promise<boolean> {
     let systemLoginUrl;
-    let user = await this.usersRepository.findOne({ email: email });
-  
-    if (!user) {
-      return false;
+    const user = await this.usersRepository.findOne({ where: { email: dto.email } });
+
+    if (!user || user.resetToken !== dto.token || new Date() > user.resetTokenExpiration) {
+      throw new Error('Invalid or expired token');
     }
   
-    if (user.resetToken !== token || new Date() > user.resetTokenExpiration) {
-      return false;
-    }
-  
-    let salt = await bcript.genSalt();
-    user.salt = salt;
-    user.password = await this.hashPassword(password, user.salt);
-  
+    user.password = await bcrypt.hash(dto.password, user.salt);
     user.resetToken = null;
     user.resetTokenExpiration = null;
-  
     await this.usersRepository.save(user);
   
     const url = user.userType.id === 2 ? process.env.COUNTRY_LOGIN_URL : process.env.PMU_LOGIN_URL;
@@ -307,7 +293,7 @@ export class UsersService extends TypeOrmCrudService<User> {
   
 
   private async hashPassword(password: string, salt: string): Promise<string> {
-    return await bcript.hash(password, salt);
+    return await bcrypt.hash(password, salt);
   }
 
 
