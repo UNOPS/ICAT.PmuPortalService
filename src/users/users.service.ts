@@ -270,81 +270,41 @@ export class UsersService extends TypeOrmCrudService<User> {
     return await this.usersRepository.save(user);
   }
 
-  async resetPassword(email: string, password: string,code: string): Promise<boolean> {
+  async resetPassword(email: string, password: string, token: string): Promise<boolean> {
     let systemLoginUrl;
     let user = await this.usersRepository.findOne({ email: email });
-    if (user.userType.id == 2) {
-      const url = process.env.COUNTRY_LOGIN_URL;
-    }
-    else {
-      const url = process.env.PMU_LOGIN_URL;
-      systemLoginUrl = url;
-    }
-    if (user) {
-      if (code) {
-        const hashPassword = await bcript.hash(code, user.salt);
-        if(hashPassword ==user.password){
-          let salt = await bcript.genSalt();
-          user.salt = salt;
-          user.password = await this.hashPassword(
-            password,
-            user.salt,
-          );
-          await this.usersRepository.save(user);  
-          var template =
-            'Dear ' + user.firstName + " " + user.lastName +
-            ' <br/>Your username is ' +
-            user.email +
-            '<br/> your login password is : ' +
-            password +
-            ' <br/>System login url is ' + '<a href="systemLoginUrl">' +
-            systemLoginUrl;
-    
-          this.emaiService.sendMail(
-            user.email,
-            'Your credentials for ICAT system',
-            '',
-            template,
-          );
-    
-          return true;
-        }
   
-        return false;
-      }
-
-      else{
-        let salt = await bcript.genSalt();
-        user.salt = salt;
-        user.password = await this.hashPassword(
-          password,
-          user.salt,
-        );
-        await this.usersRepository.save(user);  
-        var template =
-          'Dear ' + user.firstName + " " + user.lastName +
-          ' <br/>Your username is ' +
-          user.email +
-          '<br/> your login password is : ' +
-          password +
-          ' <br/>System login url is ' + '<a href="systemLoginUrl">' +
-          systemLoginUrl;
-  
-        this.emaiService.sendMail(
-          user.email,
-          'Your credentials for ICAT system',
-          '',
-          template,
-        );
-  
-        return true;
-      }
-
-     
+    if (!user) {
+      return false;
     }
-
-    return false;
+  
+    if (user.resetToken !== token || new Date() > user.resetTokenExpiration) {
+      return false;
+    }
+  
+    let salt = await bcript.genSalt();
+    user.salt = salt;
+    user.password = await this.hashPassword(password, user.salt);
+  
+    user.resetToken = null;
+    user.resetTokenExpiration = null;
+  
+    await this.usersRepository.save(user);
+  
+    const url = user.userType.id === 2 ? process.env.COUNTRY_LOGIN_URL : process.env.PMU_LOGIN_URL;
+    systemLoginUrl = url;
+  
+    const template =
+      `Dear ${user.firstName} ${user.lastName},<br/>
+      Your username is ${user.email}<br/>
+      Your new login password has been reset.<br/>
+      System login URL: <a href="${systemLoginUrl}">${systemLoginUrl}</a>`;
+  
+    await this.emaiService.sendMail(user.email, 'Your credentials for ICAT system', '', template);
+  
+    return true;
   }
+  
 
   private async hashPassword(password: string, salt: string): Promise<string> {
     return await bcript.hash(password, salt);
