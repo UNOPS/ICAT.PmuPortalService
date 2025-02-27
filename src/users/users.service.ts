@@ -3,11 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
-import * as bcript from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { ResetPassword } from 'src/auth/Dto/reset.password.dto';
-import { RSA_PSS_SALTLEN_MAX_SIGN } from 'constants';
 import { UserType } from './user.type.entity';
-import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { Institution } from 'src/institution/institution.entity';
 import { RecordStatus } from 'src/shared/entities/base.tracking.entity';
@@ -15,10 +13,6 @@ import { EmailNotificationService } from 'src/notifications/email.notification.s
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Country } from 'src/country/entity/country.entity';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { InstitutionCategory } from 'src/institution/institution.category.entity';
-import { InstitutionType } from 'src/institution/institution.type.entity';
-import { use } from 'passport';
-
 const { v4: uuidv4 } = require('uuid');
 
 @Injectable()
@@ -90,7 +84,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     newUser.institution = institution;
     newUser.country = country;
     newUser.mrvInstitution = createUserDto.mrvInstitution;
-    newUser.salt = await bcript.genSalt();
+    newUser.salt = await bcrypt.genSalt();
 
     let newUUID = uuidv4();
     let newPassword = ('' + newUUID).substr(0, 6);
@@ -228,21 +222,8 @@ export class UsersService extends TypeOrmCrudService<User> {
         return 0;
       });
   }
-
-  async findUserByEmail(email: string): Promise<any> {
-    return await this.usersRepository
-      .findOne({ email: email })
-      .then((value) => {
-        if (!!value) {
-
-          return value;
-        } else {
-          return false;
-        }
-      })
-      .catch((e) => {
-        return false;
-      });
+  async findUserByEmail(email: string): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where: { email } });
   }
 
   async remove(id: number): Promise<void> {
@@ -266,84 +247,53 @@ export class UsersService extends TypeOrmCrudService<User> {
     }
   }
 
-  async resetPassword(email: string, password: string,code: string): Promise<boolean> {
-    let systemLoginUrl;
-    let user = await this.usersRepository.findOne({ email: email });
-    if (user.userType.id == 2) {
-      const url = process.env.COUNTRY_LOGIN_URL;
-    }
-    else {
-      const url = process.env.PMU_LOGIN_URL;
-      systemLoginUrl = url;
-    }
-    if (user) {
-      if (code) {
-        const hashPassword = await bcript.hash(code, user.salt);
-        if(hashPassword ==user.password){
-          let salt = await bcript.genSalt();
-          user.salt = salt;
-          user.password = await this.hashPassword(
-            password,
-            user.salt,
-          );
-          await this.usersRepository.save(user);  
-          var template =
-            'Dear ' + user.firstName + " " + user.lastName +
-            ' <br/>Your username is ' +
-            user.email +
-            '<br/> your login password is : ' +
-            password +
-            ' <br/>System login url is ' + '<a href="systemLoginUrl">' +
-            systemLoginUrl;
+  async updateChangePasswordToken(
+    userId: string,
+    resetToken: string,
+    tokenExpiration: Date,
+  ): Promise<User> {
+    const user = await this.usersRepository.findOne(userId);
     
-          this.emaiService.sendMail(
-            user.email,
-            'Your credentials for ICAT system',
-            '',
-            template,
-          );
-    
-          return true;
-        }
-  
-        return false;
-      }
-
-      else{
-        let salt = await bcript.genSalt();
-        user.salt = salt;
-        user.password = await this.hashPassword(
-          password,
-          user.salt,
-        );
-        await this.usersRepository.save(user);  
-        var template =
-          'Dear ' + user.firstName + " " + user.lastName +
-          ' <br/>Your username is ' +
-          user.email +
-          '<br/> your login password is : ' +
-          password +
-          ' <br/>System login url is ' + '<a href="systemLoginUrl">' +
-          systemLoginUrl;
-  
-        this.emaiService.sendMail(
-          user.email,
-          'Your credentials for ICAT system',
-          '',
-          template,
-        );
-  
-        return true;
-      }
-
-     
+    if (!user) {
+      throw new Error('User not found');
     }
 
-    return false;
+    user.resetToken = resetToken;
+    user.resetTokenExpiration = tokenExpiration;
+
+    return await this.usersRepository.save(user);
   }
 
+  async resetPassword(dto: ResetPassword): Promise<boolean> {
+    let systemLoginUrl;
+    const user = await this.usersRepository.findOne({ where: { email: dto.email } });
+
+    if (!user || user.resetToken !== dto.token || new Date() > user.resetTokenExpiration) {
+      throw new Error('Invalid or expired token');
+    }
+  
+    user.password = await bcrypt.hash(dto.password, user.salt);
+    user.resetToken = null;
+    user.resetTokenExpiration = null;
+    await this.usersRepository.save(user);
+  
+    const url = user.userType.id === 2 ? process.env.COUNTRY_LOGIN_URL : process.env.PMU_LOGIN_URL;
+    systemLoginUrl = url;
+  
+    const template =
+      `Dear ${user.firstName} ${user.lastName},<br/>
+      Your username is ${user.email}<br/>
+      Your new login password has been reset.<br/>
+      System login URL: <a href="${systemLoginUrl}">${systemLoginUrl}</a>`;
+  
+    await this.emaiService.sendMail(user.email, 'Your credentials for ICAT system', '', template);
+  
+    return true;
+  }
+  
+
   private async hashPassword(password: string, salt: string): Promise<string> {
-    return await bcript.hash(password, salt);
+    return await bcrypt.hash(password, salt);
   }
 
 
