@@ -5812,12 +5812,12 @@
         }
       }
     },
-    "/institution/deactivateInstituion": {
+    "/institution/deactivateInstitution": {
       "get": {
         "operationId": "InstitutionController_deactivateInstitution",
         "parameters": [
           {
-            "name": "instiId",
+            "name": "institutionId",
             "required": true,
             "in": "query",
             "schema": { "type": "number" }

@@ -99,9 +99,9 @@ export class InstitutionController implements CrudController<Institution> {
     });
   }
 
-  @Get('deactivateInstituion')
-  async deactivateInstitution(@Query('instiId') instiId: number): Promise<any> {
-    return await this.service.softDelete(instiId);
+  @Get('deactivateInstitution')
+  async deactivateInstitution(@Query('institutionId') institutionId: number): Promise<any> {
+    return await this.service.softDelete(institutionId);
   }
 
   @UseGuards(JwtAuthGuard)
