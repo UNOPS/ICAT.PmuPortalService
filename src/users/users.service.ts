@@ -35,9 +35,9 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
 
-    let userType = await this.usersTypeRepository.findOne(
-      createUserDto.userType['id'],
-    );
+    let userType = await this.usersTypeRepository.findOne({
+      where: { id: createUserDto.userType['id'] }
+    });
 
    
     let countryId = null;
@@ -49,7 +49,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     else if (createUserDto.userType['id'] == 2) {
       countryId = createUserDto.country['id'];
       insId = 0;
-      let cou = await this.countryRepo.findOne(countryId);
+      let cou = await this.countryRepo.findOne({ where: { id: countryId } });
       cou.isCA = true;
       this.countryRepo.save(cou)
     }
@@ -65,11 +65,11 @@ export class UsersService extends TypeOrmCrudService<User> {
     }
 
 
-    let institution = await this.institutionRepository.findOne(
-      insId
-    );
+    let institution = await this.institutionRepository.findOne({
+      where: { id: insId }
+    });
 
-    let country = await this.countryRepo.findOne(countryId);
+    let country = await this.countryRepo.findOne({ where: { id: countryId } });
 
     let newUser = new User();
 
@@ -133,13 +133,13 @@ export class UsersService extends TypeOrmCrudService<User> {
 
 
   async chnageStatus(userId: number, status: number): Promise<User> {
-    let user = await this.usersRepository.findOne(userId);
+    let user = await this.usersRepository.findOne({ where: { id: userId } });
     user.status = status;
     return this.usersRepository.save(user);
   }
 
   async chnagePassword(userId: number, newPassword: string): Promise<User> {
-    let user = await this.usersRepository.findOne(userId);
+    let user = await this.usersRepository.findOne({ where: { id: userId } });
     user.password = newPassword;
     return this.usersRepository.save(user);
   }
@@ -149,7 +149,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     newToken: string,
   ): Promise<User> {
     let systemLoginUrl = this.configService.get<string>('PMU_LOGIN_URL');
-    let user = await this.usersRepository.findOne(userId);
+    let user = await this.usersRepository.findOne({ where: { id: userId } });
     user.resetToken = newToken;
     let newUUID = uuidv4();
     let newPassword = ('' + newUUID).substr(0, 6);
@@ -184,11 +184,11 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   findByUserName(userName: string): Promise<User> {
-    return this.usersRepository.findOne({ username: userName });
+    return this.usersRepository.findOne({ where: { username: userName } });
   }
 
   async validateUser(userName: string, password: string): Promise<boolean> {
-    const user = await this.usersRepository.findOne({ username: userName });
+    const user = await this.usersRepository.findOne({ where: { username: userName } });
 
 
     return (await user).validatePassword(password);
@@ -197,7 +197,7 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   async isUserAvailable(userName: string): Promise<any> {
    
-    let user = await this.usersRepository.findOne({ username: userName });
+    let user = await this.usersRepository.findOne({ where: { username: userName } });
     if (user) {
 
       return user;
@@ -209,7 +209,7 @@ export class UsersService extends TypeOrmCrudService<User> {
 
   async findUserByUserName(userName: string): Promise<any> {
     return await this.usersRepository
-      .findOne({ username: userName })
+      .findOne({ where: { username: userName } })
       .then((value) => {
         if (!!value) {
 
@@ -234,7 +234,7 @@ export class UsersService extends TypeOrmCrudService<User> {
     email: string,
     token: string,
   ): Promise<boolean> {
-    const user = await this.usersRepository.findOne({ email: email });
+    const user = await this.usersRepository.findOne({ where: { email: email } });
 
 
     if (user && user.resetToken === token) {
@@ -248,11 +248,11 @@ export class UsersService extends TypeOrmCrudService<User> {
   }
 
   async updateChangePasswordToken(
-    userId: string,
+    userId: number,
     resetToken: string,
     tokenExpiration: Date,
   ): Promise<User> {
-    const user = await this.usersRepository.findOne(userId);
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
     
     if (!user) {
       throw new Error('User not found');
